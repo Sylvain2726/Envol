@@ -76,7 +76,7 @@ class ClientController extends Controller
         return redirect()->route('client.index');
     }
 
-    // permet de recuéperer le client pour remplire dynamiquements le champs dans le formulaire de devis 
+    // permet de recuéperer le client pour remplire dynamiquements le champs dans le formulaire de devis
     public function show_client(int $id){
 
         $client = Client::find($id);

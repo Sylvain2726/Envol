@@ -44,7 +44,7 @@
     @endif
 
 
-    <div class="relative overflow-x-auto  rounded-lg shadow-xl">
+    <div class="relative overflow-x-auto  rounded-lg shadow-md shadow-black">
 
         <table class="w-full leading-normal  text-nowrap">
             <thead>
