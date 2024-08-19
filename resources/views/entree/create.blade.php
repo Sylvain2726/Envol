@@ -13,7 +13,7 @@
                     @csrf
                     <div class="flex items-center gap-4">
                         <h1 class="text-3xl">Equipement</h1>
-                        <button type="button" id="btn" class="p-1 rounded text-md-center bg-emerald-300">Ajouter</button>
+                        <button type="button" id="btn" class="p-1 rounded text-md-center shadow-sm shadow-black hover:scale-105 bg-emerald-300">Ajouter</button>
 
                     </div>
 
