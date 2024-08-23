@@ -25,7 +25,7 @@ class EntreeFormRequest extends FormRequest
             'equipement.*.equipement_id'=> ['required', 'integer', 'exists:equipements,id'],
             'equipement.*.Aprice'=> ['required', 'numeric', 'min:1'],
             'equipement.*.quantite'=> ['required', 'integer', 'min:1'],
-            'salle_id'=> ['required', 'integer', 'exists:salles,id'],
+            'equipement.*.salle_id'=> ['required', 'integer', 'exists:salles,id'],
         ];
     }
 }

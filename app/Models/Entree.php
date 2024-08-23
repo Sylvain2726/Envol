@@ -10,8 +10,7 @@ class Entree extends Model
     use HasFactory;
 
     protected $fillable = [
-        'magasin_id',
-        'salle_id',
+
         'total',
     ];
 
@@ -19,7 +18,4 @@ class Entree extends Model
      return $this->hasMany(Item::class);
  }
 
- public function salle(){
-     return $this->belongsTo(Salle::class);
- }
 }

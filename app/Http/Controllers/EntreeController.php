@@ -15,17 +15,19 @@ class EntreeController extends Controller
 {
     public function index()
     {
-        $entrees = Entree::query()->with('salle' , 'items')->paginate();
-        $magasins = Magasin::all();
+        $entrees = Entree::query()->with('items')->paginate();
 
-        return view('entree.index', compact('entrees', 'magasins'));
+
+        return view('entree.index', compact('entrees'));
     }
 
     //Voir les details de l'entree
     public function detail(Entree $entree){
         $equipements = Equipement::all();
+        $magasins = Magasin::all();
+
         $items = $entree->items;
-        return view('entree.details', compact('items', 'equipements' , 'equipements'));
+        return view('entree.details', compact('items', 'equipements' , 'magasins'));
     }
 
     public function create()
@@ -38,15 +40,17 @@ class EntreeController extends Controller
     /**
      * Enregistrer une nouvelle entree
      */
-    public function store(EntreeFormRequest $request)
+    public function store(Request $request)
     {
+
             //Recuperer la salle correspondant à la salle selectionée dans le formulaire
-            $salle = Salle::query()->find($request->salle_id);
+            //$salle = Salle::query()->find($request->salle_id);
             $entree = new Entree();
-            //associer la salle recupere en haut a l'entrée
-            $entree->salle()->associate($salle);
             $entree->total = 0;
             $entree->save();
+            //associer la salle recupere en haut a l'entrée
+            //$entree->salle()->associate($salle);
+
             /**
              * Pour chaque item d'entrée selectionné dans le formulaire
              * on l'ajoute à l'entree directement à la liaison items()
@@ -56,6 +60,7 @@ class EntreeController extends Controller
                     'equipement_id' => $equipement['equipement_id'],
                     'Aprice'=>$equipement['Aprice'],
                     'quantite'=>$equipement['quantite'],
+                    'salle_id'=>$equipement['salle_id'],
                     'total'=>$equipement['Aprice'] * $equipement['quantite'],
                 ]);
             }
@@ -63,11 +68,9 @@ class EntreeController extends Controller
             $entree->total = $entree->items->sum('total');
             $entree->save();
             //Mise à jour du stock de chaque equipement
-            foreach($request->equipement as $equi){
+/*             foreach($request->equipement as $equi){
                 $equipem = Equipement::query()->find($equi['equipement_id']);
-               /**
-                *  Créer un nouveau équipement si le prix d'achat de l'équipment en bd est différent de celui choisie
-                **/
+
 
                 if ($equipem->APrice==null || $equipem->APrice==$equi['Aprice']){
                     $equipem->update([
@@ -84,7 +87,7 @@ class EntreeController extends Controller
                     ]);
                 }
 
-            };
+            }; */
         return redirect()->route('entree.index');
     }
 
@@ -102,16 +105,18 @@ class EntreeController extends Controller
         ]);
         return redirect()->route('entree.index')->with('success' , 'entrée modifier avec succès');
     }
-    /**
+
+    /*
      * Supprimer une entrée
      */
-
     public function destroy(Entree $entree)
     {
+        $entree->items()->delete();
         $entree->delete();
         return redirect()->route('entree.index');
     }
-    /**
+    
+    /*
      * Supprimer les items d'une entrée
      */
     public function itemDelete(Item $item){
@@ -130,10 +135,12 @@ class EntreeController extends Controller
      * Modifier les items d'une entrée
      */
     public function itemModifer(Item $item ,  Request $request){
+
         $item->update([
             'Aprice' => $request->Aprice,
             'equipement_id' => $request->equipement_id,
             'quantite' => $request->quantite,
+            'salle_id' => $request->salle_id,
             'total' => $request->quantite * $request->Aprice
         ]);
         $entree = $item->entree;

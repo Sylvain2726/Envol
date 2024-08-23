@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MagasinFormRequest;
 use App\Models\Magasin;
+use App\Models\Salle;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
@@ -46,5 +47,20 @@ class MagasinController extends Controller
         $magasin->salles()->delete();
         $magasin->delete();
         return redirect()->route('magasin.index');
+    }
+
+    public function show_magasin(int $id){
+        $salle = Salle::find($id);
+        $items = $salle->items()->with('equipement')->get();
+        //$items->equipement;
+        return response()->json($items);
+
+    }
+    public function listItems(int $id){
+
+        $salle = Salle::find($id);
+        $items = $salle->items;
+        $items->equipement();
+        return response()->json($salle);
     }
 }

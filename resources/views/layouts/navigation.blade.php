@@ -1,8 +1,32 @@
+<style>
+    /* Styles pour personnaliser la barre de défilement */
+    .scroll-custom::-webkit-scrollbar {
+      width: 8px;
+      box-shadow: inherit;
+      border-radius: inherit;
+      margin: 50px 0 0 0;
+
+
+    }
+
+    .scroll-custom::-webkit-scrollbar-thumb {
+      background-color: inherit; /* Couleur de la barre */
+      border-radius: 5px;
+    }
+
+    .scroll-custom::-webkit-scrollbar-track {
+      background-color: #e2e8f000; /* Couleur de la piste */
+    }
+  </style>
+
 <div :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false"
     class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"></div>
 
 <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-    class="fixed z-30 inset-y-0 left-0 w-64 transition duration-1000 transform bg-emerald-500  shadow-inner shadow-black overflow-y-auto lg:translate-x-0 lg:static lg:inset-0 rounded-b-3xl rounded-tl-3xl ">
+    class="fixed z-30 l inset-y-0 left-0 w-64 scroll-custom overflow-y-auto  md:mb-4 md:ms-2 md:mt-2 md:ring-4 me-2 md:ring-emerald-600 transition duration-1000 transform bg-emerald-500  shadow-inner shadow-gray-950  lg:translate-x-0 lg:static lg:inset-0 rounded-3xl ">
+
+
+
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
             <span class="text-white transition duration-700  text-4xl mx-2 font-semibold">En<span id="spanv"
@@ -10,7 +34,7 @@
         </div>
     </div>
 
-    <nav class="mt-10 mx-1" x-data="{ isMultiLevelMenuOpen: false }">
+    <nav class="mt-10  mx-1" x-data="{ isMultiLevelMenuOpen: false }">
         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -38,6 +62,14 @@
             </x-slot>
             {{ __('Devis') }}
         </x-nav-link>
+
+        <x-nav-link href="{{ route('commande.index') }}" :active="request()->routeIs('commande.index')">
+            <x-slot name="icon">
+
+            </x-slot>
+            {{ __('Commande') }}
+        </x-nav-link>
+
 
         <x-nav-link href="{{ route('magasin.index') }}" :active="request()->routeIs('magasin.*', 'salle.liste')">
             <x-slot name="icon">
@@ -115,7 +147,10 @@
                         </li>
                     </ul>
          </template> --}}
+
     </nav>
+
+
 </div>
 <script>
     function toggleClass(element, className) {

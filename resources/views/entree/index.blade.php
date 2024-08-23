@@ -53,14 +53,7 @@
                         class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         #
                     </th>
-                    <th
-                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Magasin
-                    </th>
-                    <th
-                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Salle
-                    </th>
+
 
                     <th
                         class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
@@ -81,12 +74,7 @@
                         <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $entree->id }}</p>
                         </td>
-                        <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $entree->salle->magasin->name }}</p>
-                        </td>
-                        <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $entree->salle->name }}</p>
-                        </td>
+
                         <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ number_format($entree->total , '0' , ',' , ' ')  }} FCFA</p>
                         </td>
@@ -100,17 +88,7 @@
 
                             </form>
                         </td>
-                        <td class="px-5 py-3 text-md  bg-white border-b border-gray-200">
-                            <form method="post" action="{{ route('entree.edit', ['entree' => $entree]) }}">
-                                @method('GET')
-                                @csrf
-                                <button type="button" data-modal-target="crud-modal-{{ $entree->id }}"
-                                    data-modal-toggle="crud-modal-{{ $entree->id }}"
-                                    class="text-gray-900 p-2 bg-blue-500 focus:ring ring-blue-500 transition-shadow duration-500 ring-offset-4 hover:bg-blue-500/90 hover:shadow-xl shadow-inner shadow-black rounded whitespace-no-wrap">Modifier
-                                </button>
 
-                            </form>
-                        </td>
 
                         <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
                             <form id="supprimer-{{ $entree->id }}" method="post"
@@ -131,74 +109,7 @@
                             </form>
                         </td>
                     </tr>
-                    <div id="crud-modal-{{ $entree->id }}" tabindex="-1" aria-hidden="true"
-                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                        <div class="relative p-4 w-full max-w-md max-h-full">
-                            <!-- Modal content -->
-                            <div class="relative bg-white p-2 rounded-lg shadow dark:bg-gray-700">
-                                <!-- Modal header -->
-                                <div
-                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                    <h4 class="text-xl font-semibold text-gray-900 dark:text-white">Modifier la salle de
-                                        l'entrée </h4>
 
-                                    <button type="button"
-                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                        data-modal-toggle="crud-modal-{{ $entree->id }}">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="2"
-                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                        <span class="sr-only">Close modal</span>
-                                    </button>
-                                </div>
-                                <!-- Modal body -->
-                                <form method="POST" action="{{ route('entree.update', ['entree' => $entree]) }}"
-                                    class="p-4 md:p-5">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="grid gap-4 mb-4 grid-cols-2">
-                                        <div class="col-span-2">
-                                            <label for="name"
-                                                class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Magsin</label>
-                                            <select
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                name="salle_id" id="equipement" autofocus>
-                                                @foreach ($magasins as $magasin)
-                                                    @foreach ($magasin->salles as $salle)
-                                                        <option value="{{ $salle->id }}"
-                                                            {{ $entree->salle->id == $salle->id ? 'selected' : '' }}>
-                                                            @if (\PHPUnit\Framework\isEmpty($salle))
-                                                                {{ $salle->magasin->name . ': ' . $salle->name }}
-                                                            @else
-                                                                pas de salle
-                                                            @endif
-                                                        </option>
-                                                    @endforeach
-                                                @endforeach
-
-
-                                            </select>
-                                        </div>
-                                        <input type="hidden" name="magasin_id"
-                                            value="{{ $entree->salle->magasin->id }}">
-                                    </div>
-                                    <button type="submit"
-                                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                        Moddier
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
                     <div id="popup-modal-{{ $entree->id }}" tabindex="-1"
                         class="hidden overflow-y-auto  overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">

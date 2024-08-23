@@ -28,4 +28,8 @@ class Devis extends Model
     public function devisItems(){
         return $this->hasMany(DevisItem::class);
     }
+
+    public function commande(){
+        return $this->belongsTo(Commande::class);
+    }
 }

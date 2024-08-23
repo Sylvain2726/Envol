@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\DevisItemController;
 use App\Http\Controllers\EntreeController;
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('devis', DevisController::class);
     Route::resource('itemDevis' , DevisItemController::class);
     Route::resource('entree', EntreeController::class);
+    Route::resource('commande', CommandeController::class);
 
 
     Route::get('/salls/magasin-{magasin}', [SalleController::class, 'list'])->name('salle.liste');
@@ -46,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/entree/detail/modifer/{item}', [EntreeController::class, 'itemModifer'])->name('item.update');
     Route::get('/items', [EntreeController::class, 'itemIndex'])->name('item.index');
     Route::get('/stock', [EquipementController::class, 'stock'])->name('equipement.stock');
+    Route::get('/creation/commande{devi}' , [CommandeController::class, 'createCommande'])->name('commande.form');
+    Route::post('/commande/retour/{commande}', [CommandeController::class, 'retour'])->name('commande.retour');
+    Route::post('/commande/annuler/{commande}', [CommandeController::class, 'annuler'])->name('commande.annuler');
 
     Route::post('etape1/devis/store' , [DevisController::class, 'post_etape1'])->name('post.etape1');
     Route::get('etape2/devis/' , [DevisController::class, 'get_etape2'])->name('get.etape2');
@@ -55,6 +60,8 @@ Route::middleware('auth')->group(function () {
     //Ces deux routes permette juste de remplire automatiquement certain champ en fonction du client ou équipement choisie
     Route::get('voir/client/{id}', [ClientController::class, 'show_client'])->name('show.client');
     Route::get('voir/equipement/{id}', [EquipementController::class, 'show_equipement'])->name('show.equipement');
+    Route::get('/voir/magasin/{id}', [MagasinController::class, 'show_magasin'])->name('show.magasin');
+    Route::get('/voir/item/{id}', [MagasinController::class, 'listItems'])->name('show.items');
 });
 
 require __DIR__ . '/auth.php';

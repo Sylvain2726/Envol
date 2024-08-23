@@ -35,4 +35,9 @@ class Equipement extends Model
         return $this->hasMany(DevisItem::class);
     }
 
+    public function getStock(){
+
+        return $this->items->sum('quantite');
+    }
+
 }

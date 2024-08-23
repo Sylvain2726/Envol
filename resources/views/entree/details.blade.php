@@ -74,6 +74,10 @@
                 <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Prix d'achat
                 </th>
+
+                <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                    Magasin
+                </th>
                 <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Total
                 </th>
@@ -112,8 +116,12 @@
                         <p class="text-gray-900 whitespace-no-wrap">{{$item->Aprice}}</p>
                     </td>
                     <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <p class="text-gray-900 whitespace-no-wrap">{{ $item->salle->magasin->name. ' '. $item->salle->name}}</p>
+                    </td>
+                    <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">{{ $item->total}}</p>
                     </td>
+
 {{--                    <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">--}}
 {{--                        <button data-modal-target="crud-modal-{{ $item->id }}" data-modal-toggle="crud-modal-{{ $magasin->id }}" class="text-gray-900 p-2 bg-zinc-300 focus:ring ring-zinc-300 transition-shadow duration-500 ring-offset-4 hover:bg-zinc-300/90 hover:shadow-xl shadow-inner shadow-black rounded text-nowrap whitespace-no-wrap"></button>--}}
 {{--                    </td>--}}
@@ -154,6 +162,30 @@
                                 <div class="m-2" >
                                     <label class="block text-sm text-gray-700" for="equipement">
                                         Nom de l'equipement
+                                    </label>
+                                    <select
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    name="salle_id" id="salle" autofocus>
+                                    @foreach ($magasins as $magasin)
+                                        @foreach ($magasin->salles as $salle)
+                                            <option value="{{ $salle->id }}"
+                                                >
+                                                @if (\PHPUnit\Framework\isEmpty($salle))
+                                                    {{ $salle->magasin->name . ': ' . $salle->name }}
+                                                @else
+                                                    pas de salle
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    @endforeach
+
+
+                                </select>
+                                </div>
+
+                                <div class="m-2" >
+                                    <label class="block text-sm text-gray-700" for="equipement">
+                                        Equipement
                                     </label>
                                     <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" name="equipement_id" id="equipement" autofocus="">
                                         @foreach($equipements as $equipement)

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EquipementFormRequest;
 use App\Models\Equipement;
+use App\Models\Item;
+use App\Models\Salle;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,13 +23,15 @@ class EquipementController extends Controller
     }
     public function stock(Request $request){
 
+        $salles = Salle::all();
+
         $equipements = Equipement::query()
         ->where('name' , 'like' , "%".$request->input('search') ."%")
         ->orwhere('type' , 'like' , "%".$request->input('search') ."%")
         ->orWhere('VPrice' , 'like' , "%".$request->input('search') ."%")
         ->orWhere('Aprice' , 'like' , "%".$request->input('search') ."%")
         ->paginate();
-        return view('equipement.stock', compact('equipements' , 'request'));
+        return view('equipement.stock', compact('equipements' , 'request' , 'salles'));
     }
 
     public function create(): View
@@ -62,7 +66,10 @@ class EquipementController extends Controller
 
     public function show_equipement(int $id){
 
-        $equipement = Equipement::find($id);
+        $items = Item::find($id);
+        $equipement = $items->equipement;
+        $equipement->items;
+
         return response()->json($equipement);
     }
 }

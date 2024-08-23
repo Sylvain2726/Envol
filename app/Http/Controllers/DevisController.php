@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Devis;
 use App\Models\DevisItem;
 use App\Models\Equipement;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
@@ -50,24 +51,17 @@ class DevisController extends Controller
 
     public function get_etape2(Request $request){
 
-        $equipements = Equipement::query()
-        ->where('Aprice' , "!=" , null )->get();
+        $equipements = Equipement::all();
 
         return view('devis.etape2'  , compact('equipements'));
     }
 
     public function post_etape2(Request $request){
 
-
-
         $request->validate([
             'equipements.*.quantite'=>'required|numeric',
             'equipements.*.equipement_id'=>'required|numeric'
         ]);
-
-
-
-        //dd($request ,$request->session()->get('devis'));
 
         $devis = $request->session()->get('devis');
         $client = Client::query()->find($devis->client_id);
@@ -75,17 +69,18 @@ class DevisController extends Controller
         $devis->user_id = Auth::user()->id;
 
         $devis->save();
-        foreach ($request->equipements as $item) {
-            $equipement = Equipement::query()->find($item['equipement_id']);
+        foreach ($request->equipements as $equipement) {
+            $item = Item::query()->find($equipement['equipement_id']);
 
             $devis->devisItems()->create([
 
-                "equipement_id"=>$equipement->id,
-                "quantite"=>$item['quantite'],
-                "total"=>$equipement->VPrice * $item['quantite'],
-                'name'=>$equipement->name,
-                'VPrice'=>$equipement->VPrice,
-                'type'=>$equipement->type
+                "equipement_id"=>$item->equipement->id,
+                'item_id'=>$item->id,
+                "quantite"=>$equipement['quantite'],
+                "total"=>$item->equipement->VPrice * $equipement['quantite'],
+                'name'=>$item->equipement->name,
+                'VPrice'=>$item->equipement->VPrice,
+                'type'=>$item->equipement->type
             ]);
         }
 

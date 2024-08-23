@@ -107,12 +107,12 @@
 
                         <th
                             class="px-5  text-lg border-2 font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-300">
-                            Prix unitaire
+                            Prix TTC
                         </th>
 
                         <th
                             class="px-5  text-lg border-2  font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-300">
-                            Total
+                            Prix Total
                         </th>
 
                     </tr>

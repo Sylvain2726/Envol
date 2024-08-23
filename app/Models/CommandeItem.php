@@ -5,32 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DevisItem extends Model
+class CommandeItem extends Model
 {
     use HasFactory;
 
-    protected $fillable= [
-        'devis_id',
-        'equipement_id',
+    protected $fillable = [
+        'commandes_id',
         'item_id',
+        'equipement_id',
         'quantite',
         'total',
-        'name',
+        'name' ,
         'type',
         'VPrice'
     ];
 
-    public function devis(){
-        return $this->belongsTo(Devis::class);
-    }
-
-    public function equipment(){
-        return $this->belongsTo(Equipement::class);
-
-    }
-
     public function item(){
         return $this->belongsTo(Item::class);
+    }
 
+    public function commande(){
+        return $this->belongsTo(Commande::class);
     }
 }

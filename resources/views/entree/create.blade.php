@@ -17,27 +17,11 @@
 
                     </div>
 
-                    <div id="addEntree" class="px-5 space-y-3">
+                    <div id="addEntree" class="px-2 space-y-3">
 
                     </div>
 
-                        <div>
 
-                        <x-input-label for="magasin" :value="__('Magasin')"/>
-                        <select class=" mt-1 w-full hover:scale-105  focus:outline-none focus:ring transition-all duration-200 rounded-lg shadow-md focus:ring-zinc-400 focus:scale-105 bg-zinc-300 ring-offset-4 shadow-zinc-700 border-none form-input"
-                                name="salle_id"
-                                id="equipement"
-                                autofocus
-                        >
-                            @foreach($magasins as $magasin)
-                                @foreach($magasin->salles as $salle)
-                                    <option value="{{$salle->id}}">@if(\PHPUnit\Framework\isEmpty($salle)){{ $salle->magasin->name. ": " . $salle->name}} @else pas de salle @endif</option>
-                                @endforeach
-                            @endforeach
-
-
-                        </select>
-                    </div>
 
 
                     <div class="flex justify-center items-center">
@@ -78,7 +62,27 @@
                     Quantite
                 </label>
                 <input class="block mt-1 w-full hover:scale-105  focus:outline-none focus:ring transition-all duration-200 rounded-lg shadow-md focus:ring-zinc-400 focus:scale-105 bg-zinc-300 ring-offset-4 shadow-zinc-700 border-none form-input" type="number" name="equipement[${i}][quantite]" id="quantite" value="" autofocus="autofocus">
-            </div>`
+            </div>
+
+                                    <div>
+
+                        <x-input-label for="magasin" :value="__('Magasin')"/>
+                        <select class=" mt-1 w-full hover:scale-105  focus:outline-none focus:ring transition-all duration-200 rounded-lg shadow-md focus:ring-zinc-400 focus:scale-105 bg-zinc-300 ring-offset-4 shadow-zinc-700 border-none form-input"
+                                name="equipement[${i}][salle_id]"
+                                id="equipement"
+                                autofocus
+                        >
+                            @foreach($magasins as $magasin)
+                                @foreach($magasin->salles as $salle)
+                                    <option value="{{$salle->id}}">@if(\PHPUnit\Framework\isEmpty($salle)){{ $salle->magasin->name. ": " . $salle->name}} @else pas de salle @endif</option>
+                                @endforeach
+                            @endforeach
+
+
+                        </select>
+                    </div>
+
+            `
 
 
             div.append(div1)

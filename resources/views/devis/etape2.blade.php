@@ -62,7 +62,9 @@
                                 name="equipements[0][equipement_id]" id="equipementSelect">
                                 <option value="default">Choisir un équipement</option>
                                 @foreach ($equipements as $equipement)
-                                    <option value="{{ $equipement->id }}">{{ $equipement->name }}</option>
+                                    @foreach ($equipement->items as $item )
+                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle->name }}</option>
+                                    @endforeach
                                 @endforeach
                             </select>
 
@@ -75,14 +77,14 @@
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
+                                {{--  <div>
                                     <label for="Aprice"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prix
                                         d'achat</label>
                                     <input disabled type="text" name="Aprice" id="Aprice"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="Prix d'achat" required="">
-                                </div>
+                                </div> --}}
 
                                 <div>
                                     <label for="VPrice"
@@ -130,23 +132,26 @@
 
     <script>
         const qte = document.querySelector('#quantite')
-
-
         let quantite
-
-
         function formEquipment1() {
             const selectElement = document.getElementById('equipementSelect');
             const id = selectElement.value;
+            console.log(id);
 
-            const form = selectElement.closest('.space-y-9'); // Récupère le formulaire actuel
+            let somme = 0
+            let stock
 
-            if (id === 'default') {
-                document.querySelector('#Aprice').value = '';
-                document.querySelector('#VPrice').value = '';
-                document.querySelector('#type').value = '';
-                document.querySelector('#stock').value = '';
-            } else {
+            const form = selectElement.closest('.space-y-9');
+             // Récupère le formulaire actuel
+
+            if (id == 'default') {
+                document.querySelector('#Aprice').value = ' ';
+                document.querySelector('#VPrice').value = ' ';
+                document.querySelector('#type').value = ' ';
+                document.querySelector('#stock').value = ' ';
+
+                return
+                }
                 fetch('/voir/equipement/' + id)
                     .then(response => {
                         if (!response.ok) {
@@ -155,11 +160,16 @@
                         return response.json();
                     })
                     .then(data => {
-                            document.querySelector('#Aprice').value = data.APrice;
-                            document.querySelector('#VPrice').value = data.VPrice;
-                            document.querySelector('#stock').value = data.stock;
-                            document.querySelector('#type').value = data.type;
+                           data.items.forEach((item) => {
+                               if(item.id==id){
+                                 stock = item.quantite
+                               }
 
+                           })
+
+                            document.querySelector('#VPrice').value = data.VPrice;
+                            document.querySelector('#stock').value = stock;
+                            document.querySelector('#type').value = data.type;
 
                             qte.addEventListener('change', () => {
 
@@ -171,7 +181,6 @@
                                     alerte.classList.remove('invisible')
                                 }
 
-
                             });
                         }
 
@@ -179,7 +188,6 @@
                     .catch(error => {
                         console.error('Il y a eu un problème avec l\'opération fetch:', error);
                     });
-            }
 
         };
 
@@ -187,6 +195,8 @@
             const selectElement = event.target;
             const id = selectElement.value;
             const form = selectElement.closest('.space-y-9'); // Récupère le formulaire actuel
+            let somme = 0
+            let stock
 
             if (id === 'default') {
                 form.querySelector('[name="Aprice"]').value = '';
@@ -202,9 +212,16 @@
                         return response.json();
                     })
                     .then(data => {
-                        form.querySelector('[name="Aprice"]').value = data.APrice;
+                        data.items.forEach((item) => {
+                               if(item.id==id){
+                                 stock = item.quantite
+                               }
+
+                           })
+
+                        //form.querySelector('[name="Aprice"]').value = data.APrice;
                         form.querySelector('[name="VPrice"]').value = data.VPrice;
-                        form.querySelector('[name="stock"]').value = data.stock;
+                        form.querySelector('[name="stock"]').value = stock
                         form.querySelector('[name="type"]').value = data.type;
                     })
                     .catch(error => {
@@ -231,7 +248,9 @@
                                 name="equipements[${i}][equipement_id]" id="equipement">
                                 <option value="default">Choisir un équipement</option>
                                 @foreach ($equipements as $equipement)
-                                    <option value="{{ $equipement->id }}">{{ $equipement->name }}</option>
+                                    @foreach ($equipement->items as $item )
+                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle->name }}</option>
+                                    @endforeach
                                 @endforeach
                             </select>
 
@@ -243,15 +262,7 @@
                                     placeholder="Quantité" required="">
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label for="Aprice"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prix
-                                        d'achat</label>
-                                    <input disabled type="text" name="Aprice" id="Aprice"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Prix d'achat" required="">
-                                </div>
+
 
                                 <div>
                                     <label for="VPrice"

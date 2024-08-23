@@ -15,7 +15,8 @@ class Item extends Model
         'Aprice',
         'name',
         'type',
-        'equipement_id'
+        'equipement_id',
+        'salle_id'
     ];
 
     public function entree(){
@@ -23,5 +24,17 @@ class Item extends Model
     }
     public function equipement(){
         return $this->belongsTo(Equipement::class);
+    }
+
+    public function salle(){
+        return $this->belongsTo(Salle::class);
+    }
+
+    public function devisItem(){
+        return $this->belongsTo(DevisItem::class);
+    }
+
+    public function commandeItem(){
+        return $this->belongsTo(CommandeItem::class);
     }
 }

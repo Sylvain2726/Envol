@@ -16,7 +16,7 @@ class Salle extends Model
         return $this->belongsTo(Magasin::class);
     }
 
-    public function entrees(){
-        return $this->hasMany(Entree::class);
+    public function items(){
+        return $this->hasMany(Item::class);
     }
 }
