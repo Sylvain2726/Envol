@@ -116,10 +116,10 @@
                         <p class="text-gray-900 whitespace-no-wrap">{{$item->Aprice}}</p>
                     </td>
                     <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ $item->salle->magasin->name. ' '. $item->salle->name}}</p>
+                        <p class="text-gray-900 whitespace-no-wrap">{{ $item->salle?->magasin?->name. ' '. $item->salle?->name}}</p>
                     </td>
                     <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ $item->total}}</p>
+                        <p class="text-gray-900 whitespace-no-wrap">{{ $item->Aprice * $item->quantite}}</p>
                     </td>
 
 {{--                    <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">--}}

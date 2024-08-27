@@ -5,7 +5,7 @@
             <h1 class="text-3xl md:text-5xl py-4">{{ __('Confirmation de commande') }}</h1>
             <div class="flex justify-end gap-4">
                 <button form="confirmCommande" type="submit" class="p-1  text-2xl text-white font-bold hover:shadow-sm hover:shadow-black focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-emerald-400 shadow-black shadow-inner">Confirmer</button>
-                <form method="post" action="{{ route('commande.retour' , ['commande' => $commande]) }}">
+                <form method="post" action="{{ route('commande.retour') }}">
                     @csrf
                     <button class="p-1  text-2xl text-black font-bold hover:shadow-sm hover:shadow-black focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-white shadow-black shadow-inner">Retour</button>
                 </form>
@@ -70,8 +70,14 @@
 @endif
 
     <div class="relative overflow-x-auto rounded-lg shadow-sm shadow-black">
+        <div class="bg-white text-lg shadow-sm shadow-black rounded-2 m-3">
+            <x-input-error :messages="$errors->get('client_id')" class="mt-2" />
+
+        </div>
+
 
         <table class="min-w-full leading-normal text-nowrap">
+
             <thead>
                 <tr>
                     <th class="px-5 hidden py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">ID</th>
@@ -84,6 +90,7 @@
                 </tr>
             </thead>
             <tbody>
+
                 <form id="confirmCommande" action="{{ route('commande.store') }}" method="post">
                     @csrf
                     <input type="text" class="hidden" name="client_id" value="{{ $commande->client_id }}">
@@ -105,6 +112,8 @@
 
                             <td class="px-2 py-3 text-sm bg-white border-b border-gray-200">
                                 <input onblur="this.readOnly = true" ondblclick="this.readOnly = false" readonly id="name" class="border-none focus:outline-none focus:ring-0" type="text" name="item[{{ $i }}][name] " value="{{ $item->name}}">
+                                <x-input-error :messages="$errors->get('item.' . $i . '.name')" class="mt-2" />
+
                             </td>
 
                             <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
@@ -121,17 +130,25 @@
 
                             <td class="px-5 py-3 hidden text-sm bg-white border-b border-gray-200">
                                 <input ondblclick="this.readOnly = false" onblur="this.readOnly = true" readonly type="text" name="item[{{ $i }}][equipement_id]" value="{{ $item->equipement_id }}" class="border-none  focus:outline-none focus:ring-0">
+                                <x-input-error :messages="$errors->get('item.' . $i . '.equipement_id')" class="mt-2" />
+
                             </td>
 
                             <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                                <input list="equipements" onblur="this.readOnly = true" ondblclick="this.readOnly = false" readonly type="text" value="{{ $item->item_id }}" name="item[{{ $i }}][item_id]" class="border-none focus:outline-none focus:ring-0">
+                                <input required list="equipements" onblur="this.readOnly = true" ondblclick="this.readOnly = false" readonly type="text" value="{{ $item->item_id ?? '' }}" name="item[{{ $i }}][item_id]" class="border-none focus:outline-none focus:ring-0">
+                                <x-input-error :messages="$errors->get('item.' . $i . '.item_id')" class="mt-2" />
                                 <datalist id="equipements">
                                     @foreach ($equipements as $equipement)
+
+
                                         @foreach ($equipement->items as $items)
-                                            <option {{ $equipement->id == $item->equipement_id ? 'selected' : '' }} value="{{ $items->id }}">
-                                                {{ $equipement->name . ' | Numéro entrée : ' . $items->entree_id . ' | Stock : ' . $items->quantite }}
-                                            </option>
+
+                                                    <option {{ $equipement->id == $item->equipement_id ? 'selected' : '' }} value="{{ $items->id }}">
+                                                        {{ $equipement->items ? $equipement->name . ' | Numéro entrée : ' . $items->entree_id . ' | Stock : ' . $items->quantite : 'Aucun équipements en stock' }}
+                                                    </option>
+
                                         @endforeach
+
                                     @endforeach
                                 </datalist>
                             </td>

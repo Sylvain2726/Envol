@@ -23,6 +23,10 @@ class Commande extends Model
         return $this->hasMany(CommandeItem::class);
     }
 
+    public function facture(){
+        return $this->belongsTo(Facture::class);
+    }
+
 }
 
 

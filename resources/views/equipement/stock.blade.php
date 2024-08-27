@@ -77,7 +77,7 @@
                 </th>
 
                 <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                    Repartition par magasin
+                    Répartition par magasin
                 </th>
 
                 </th>
@@ -103,8 +103,8 @@
                     </td>
                     <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">
-                            @foreach ($equipement->items as $item)
-                            <p>{{ $item->salle->magasin->name. ' '. $item->salle->name. ' : '.$item->quantite. ' '.$item->equipement->name }}</p>
+                            @foreach ($equipement->items->where('quantite' , '>' , 0) as $item)
+                            <p>{{ $item->salle?->magasin?->name. ' '. $item->salle?->name. ' : '.$item->quantite. ' '.$item->equipement->name }}</p>
                             @endforeach
                         </p>
                     </td>

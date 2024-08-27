@@ -60,7 +60,7 @@
 
     <x-slot name="header">
         <div class="flex flex-col md:flex-row md:gap-10 md:items-center">
-            <h1 class="text-3xl md:text-5xl py-4">{{ __('Gestion des Equipements') }}</h1>
+            <h1 class="text-3xl md:text-5xl py-4">{{ __('Gestion des factures') }}</h1>
             <form class="py-4 " method="get" action="">
                 <input
                     class="rounded-xl placeholder-emerald-500 ring ring-emerald-500 focus:ring focus:outline-none  p-2 border-none shadow-inner shadow-gray-950"
@@ -69,13 +69,13 @@
             {{--             <div>
                 <a id="add"
                     class="p-1 text-2xl text-white font-bold hover:shadow-xl focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-emerald-400 shadow-black shadow-inner"
-                    href="{{ route('equipement.create') }}">Ajouter</a>
+                    href="{{ route('facture.create') }}">Ajouter</a>
             </div> --}}
 
-            <a href="{{ route('equipement.create') }}" class="float flex justify-center hover:scale-105">
+            <a href="#" class="float flex justify-center hover:scale-105">
 
-                <svg class="w-6 h-6 text-white font-extrabold fa fa-plus my-float" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-white font-extrabold fa fa-plus my-float" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M5 12h14m-7 7V5" />
                 </svg>
@@ -85,10 +85,6 @@
                 <div class="label-text">Ajouter</div>
                 <i class="fa fa-play label-arrow"></i>
             </div>
-
-
-
-
         </div>
     </x-slot>
 
@@ -125,13 +121,34 @@
                 <tr>
                     <th
                         class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Nom</th>
+                        Num Commande
+                    </th>
                     <th
                         class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Type</th>
+                        Num Facture
+                    </th>
                     <th
                         class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Prix de vente</th>
+                        Client
+                    </th>
+                        <th
+                            class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                            Montant Total
+                        </th>
+
+                        <th
+                            class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                            Montant Payé
+                        </th>
+                        <th
+                            class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                            Montant Restant
+                        </th>
+                        <th
+                            class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                            Mode de payement
+                        </th>
+
                     <th
                         class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Actions
@@ -139,21 +156,33 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($equipements as $equipement)
-                    <tr id="ligne-{{ $equipement->id }}">
+                @foreach ($factures as $facture)
+                    <tr id="ligne-{{ $facture->commande_id }}">
                         <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->name }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->commande_id }}</p>
                         </td>
                         <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->type }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->numFacture }}</p>
                         </td>
                         <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->VPrice }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->commande->devis->client->firstname }}</p>
+                        </td>
+                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->total }}</p>
+                        </td>
+                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->montantPaye }}</p>
+                        </td>
+                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->montantRestant }}</p>
+                        </td>
+                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $facture->modePaiement }}</p>
                         </td>
 
                         <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
-                            <button id="dropdownMenuIconButton-{{ $equipement->id }}"
-                                data-dropdown-toggle="dropdownDots-{{ $equipement->id }}"
+                            <button id="dropdownMenuIconButton-{{ $facture->id }}"
+                                data-dropdown-toggle="dropdownDots-{{ $facture->id }}"
                                 class="inline-flex items-center p-2 text-md font-extrabold text-center transition-all duration-700 text-black bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                                 type="button">
                                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -165,27 +194,51 @@
                         </td>
                     </tr>
 
-                    <div id="dropdownDots-{{ $equipement->id }}" tabindex="-1"
-                        class="z-10 hidden bg-gray-200 divide-y divide-gray-300 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <div id="dropdownDots-{{ $facture->id }}" tabindex="-1"
+                        class="z-10 hidden bg-gray-200 divide-y divide-gray-300 rounded-lg shadow-md shadow-black w-48 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-md text-gray-700 dark:text-gray-200 "
                             aria-labelledby="dropdownMenuIconButton">
 
                             <li>
-                                <form method="GET"
-                                    action="{{ route('equipement.edit', ['equipement' => $equipement]) }}">
+                                <form method="GET">
+                                    @csrf
+                                    <button type="submit"
+                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ajouter un payement</button>
+                                </form>
+                            </li>
+
+
+
+                            <li>
+                                <form method="GET" action="{{ route('facture.generer' , $facture) }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Génerer la facture</button>
+                                </form>
+                            </li>
+
+                            <li>
+                                <form method="GET">
+
                                     @csrf
                                     <button type="submit"
                                         class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Modifier</button>
                                 </form>
                             </li>
+                            <li>
+                                <form method="GET">
+                                    @csrf
+                                    <button type="submit"
+                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Annuler</button>
+                                </form>
+                            </li>
 
                             <li>
-                                <form id="supprimer-{{ $equipement->id }}" method="post"
-                                    action="{{ route('equipement.destroy', ['equipement' => $equipement]) }}">
+                                <form id="supprimer-{{ $facture->id }}" method="post" action="{{ route('facture.destroy' , $facture) }}">
                                     @method('DELETE')
                                     @csrf
-                                    <button data-modal-target="popup-modal-{{ $equipement->id }}"
-                                        data-modal-toggle="popup-modal-{{ $equipement->id }}" type="button"
+                                    <button data-modal-target="popup-modal-{{ $facture->id }}"
+                                        data-modal-toggle="popup-modal-{{ $facture->id }}" type="button"
                                         class="block px-4 w-full  text-red-500 font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                         Supprimer
                                     </button>
@@ -196,13 +249,13 @@
 
                         </ul>
                     </div>
-                    <div id="popup-modal-{{ $equipement->id }}" tabindex="-1"
+                    <div id="popup-modal-{{ $facture->id }}" tabindex="-1"
                         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                         <div class="relative p-4 w-full max-w-md max-h-full">
                             <div class="relative bg-zinc-100 rounded-lg shadow dark:bg-gray-700">
                                 <button type="button"
                                     class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                    data-modal-hide="popup-modal-{{ $equipement->id }}">
+                                    data-modal-hide="popup-modal-{{ $facture->id }}">
                                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -220,11 +273,12 @@
                                     </svg>
                                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Vous ête sûr
                                         de supprimer cet équipement ?</h3>
-                                    <button id="{{ $equipement->id }}"
+                                    <button id="{{ $facture->id }}"
+                                        type="submit" form="supprimer-{{ $facture->id }}"
                                         class="confirm-delete text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                         Oui
                                     </button>
-                                    <button data-modal-hide="popup-modal-{{ $equipement->id }}" type="button"
+                                    <button data-modal-hide="popup-modal-{{ $facture->id }}" type="button"
                                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
                                 </div>
                             </div>
@@ -234,7 +288,6 @@
             </tbody>
         </table>
         <div class="flex flex-col items-center px-5 py-5 bg-white border-t xs:flex-row xs:justify-between">
-            {{ $equipements->links() }}
         </div>
     </div>
 

@@ -69,9 +69,10 @@ class CommandeController extends Controller
 
 
       $equipements = Equipement::all();
+      $salles = Salle::all();
 
 
-      return view('commande.confirme' , compact('devi' , 'commande' , 'equipements' ));
+      return view('commande.confirme' , compact('devi' , 'commande' , 'equipements' ,'salles'));
     }
 
     /**
@@ -79,7 +80,25 @@ class CommandeController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+
+
+        $request->validate([
+            'item.*.name'=>'required|string|exists:equipements,name',
+            'item.*.VPrice'=>'required|numeric',
+            'item.*.quantite'=>'required|integer|min:1,',
+            'item.*.type'=>'required|string|exists:equipements,type',
+            'item.*.item_id'=>'required|integer|exists:items,id',
+            'item.*.equipement_id'=>'required|integer|exists:equipements,id',
+            'client_id' => 'required|exists:clients,id|numeric',
+            'devis_id'=>'required|exists:devis,id|numeric',
+
+        ] , [
+            'client_id.exists' => 'Le client pour cette commande n\'existe pas voici l\' identifiant : '. $request->client_id,
+            'item.*.name.exists' => 'Ce nom d\'equipement n\'existe pas.',
+            'item.*.type.exists' => 'Ce type d\'equipement n\'existe pas.',
+            'item.*.item_id.exists' => 'Choisissez une salle valide',
+        ]);
+       // dd($request->all());
         $commande = new Commande();
         $commande->client_id = $request->client_id;
         $commande->devis_id = $request->devis_id;
@@ -150,9 +169,7 @@ public function update(Request $request, Commande $commande)
 
     }
 
-    public function retour(Commande $commande){
-        $commande->commandeItems()->delete();
-        $commande->delete();
+    public function retour(){
        return redirect()->route('devis.index');
     }
 
@@ -161,9 +178,20 @@ public function update(Request $request, Commande $commande)
      */
     public function destroy(Commande $commande)
     {
+        if ($commande->statut == 'En cours') {
+            foreach ($commande->commandeItems as $commandeItem) {
+                $itemEntree = Item::query()->find($commandeItem->item_id);
+                $itemEntree->quantite = $itemEntree->quantite + $commandeItem->quantite;
+                $itemEntree->save();
+                $commande->devis->statut = 0;
+                $commande->devis->save();
+                $commande->save();
+            }
+        }
+
         $commande->commandeItems()->delete();
         $commande->delete();
-        $commande->devis->statut = 0;
+        $commande->devis?  $commande->devis->statut = 0: '' ;
         $commande->devis->save();
         return redirect()->route('commande.index');
     }
@@ -174,6 +202,8 @@ public function update(Request $request, Commande $commande)
             $itemEntree->quantite = $itemEntree->quantite + $commandeItem->quantite;
             $itemEntree->save();
             $commande->statut = 'Annulée';
+            $commande->devis->statut = 0;
+            $commande->devis->save();
             $commande->save();
         }
 

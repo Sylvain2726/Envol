@@ -63,7 +63,7 @@
                                 <option value="default">Choisir un équipement</option>
                                 @foreach ($equipements as $equipement)
                                     @foreach ($equipement->items as $item )
-                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle->name }}</option>
+                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle?->name }}</option>
                                     @endforeach
                                 @endforeach
                             </select>
@@ -149,7 +149,6 @@
                 document.querySelector('#VPrice').value = ' ';
                 document.querySelector('#type').value = ' ';
                 document.querySelector('#stock').value = ' ';
-
                 return
                 }
                 fetch('/voir/equipement/' + id)
@@ -164,9 +163,7 @@
                                if(item.id==id){
                                  stock = item.quantite
                                }
-
                            })
-
                             document.querySelector('#VPrice').value = data.VPrice;
                             document.querySelector('#stock').value = stock;
                             document.querySelector('#type').value = data.type;
@@ -180,17 +177,13 @@
 
                                     alerte.classList.remove('invisible')
                                 }
-
                             });
                         }
-
                     )
                     .catch(error => {
                         console.error('Il y a eu un problème avec l\'opération fetch:', error);
                     });
-
         };
-
         function formEquipment(event) {
             const selectElement = event.target;
             const id = selectElement.value;
@@ -216,9 +209,7 @@
                                if(item.id==id){
                                  stock = item.quantite
                                }
-
                            })
-
                         //form.querySelector('[name="Aprice"]').value = data.APrice;
                         form.querySelector('[name="VPrice"]').value = data.VPrice;
                         form.querySelector('[name="stock"]').value = stock
@@ -249,7 +240,7 @@
                                 <option value="default">Choisir un équipement</option>
                                 @foreach ($equipements as $equipement)
                                     @foreach ($equipement->items as $item )
-                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle->name }}</option>
+                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle?->name }}</option>
                                     @endforeach
                                 @endforeach
                             </select>

@@ -63,11 +63,19 @@
             {{ __('Devis') }}
         </x-nav-link>
 
+
         <x-nav-link href="{{ route('commande.index') }}" :active="request()->routeIs('commande.index')">
             <x-slot name="icon">
 
             </x-slot>
             {{ __('Commande') }}
+        </x-nav-link>
+        
+        <x-nav-link href="{{ route('facture.index') }}" :active="request()->routeIs('facture.index', 'facture.create')">
+            <x-slot name="icon">
+
+            </x-slot>
+            {{ __('Facture') }}
         </x-nav-link>
 
 

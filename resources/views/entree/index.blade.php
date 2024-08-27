@@ -1,4 +1,62 @@
 <x-app-layout>
+
+    <style>
+        .label-container {
+            position: fixed;
+            bottom: 48px;
+            right: 105px;
+            display: table;
+            visibility: hidden;
+        }
+
+        .label-text {
+            color: #FFF;
+            background: rgba(51, 51, 51, 0.5);
+            display: table-cell;
+            vertical-align: middle;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 20px
+        }
+
+        .label-arrow {
+            display: table-cell;
+            vertical-align: middle;
+            color: #333;
+            opacity: 0.5;
+        }
+
+        .float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 15px;
+            right: 45px;
+            opacity: 0.7;
+            background-color: rgb(0, 204, 153);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 5px 5px 5px #131615;
+        }
+
+        .my-float {
+            font-size: 24px;
+            margin-top: 18px;
+        }
+
+        a.float+div.label-container {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s ease;
+        }
+
+        a.float:hover+div.label-container {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+
     <x-slot name="header">
         <div class="flex headline  flex-col md:flex-row md:justify-between md:items-center">
 
@@ -15,6 +73,20 @@
             </div>
         </div>
     </x-slot>
+
+                <a href="{{ route('entree.create') }}" class="float flex justify-center hover:scale-105">
+
+                <svg class="w-6 h-6 text-white font-extrabold fa fa-plus my-float" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 12h14m-7 7V5" />
+                </svg>
+
+            </a>
+            <div class="label-container">
+                <div class="label-text">Ajouter</div>
+                <i class="fa fa-play label-arrow"></i>
+            </div>
 
     @if (session('success'))
         <div id="toast-success"
@@ -54,13 +126,10 @@
                         #
                     </th>
 
-
                     <th
                         class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Totale
                     </th>
-
-
 
                     <th colspan="3"
                         class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
@@ -76,7 +145,7 @@
                         </td>
 
                         <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ number_format($entree->total , '0' , ',' , ' ')  }} FCFA</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ number_format($entree->items->sum('total') , '0' , ',' , ' ')  }} FCFA</p>
                         </td>
                         <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
                             <form method="post" action="{{ route('entree.detail', ['entree' => $entree]) }}">

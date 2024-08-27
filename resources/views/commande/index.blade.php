@@ -1,18 +1,14 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-            <h1 class="text-3xl md:text-5xl py-4 ">{{ __('Gestion des commande') }}</h1>
+        <div class="flex flex-col md:flex-row md:gap-10 md:items-center">
+            <h1 class="text-3xl md:text-5xl py-4 ">{{ __('Gestion des commandes') }}</h1>
             <form class="py-4" method="get" action="">
                 <input
                     class="rounded-xl placeholder-emerald-500 ring ring-emerald-500 focus:ring focus:outline-none focus:border-red-600 p-2 border-none shadow-sm shadow-black"
                     name="search" id="search" value="{{ $request->search ?? '' }}" placeholder="Recherche">
             </form>
-            <div>
-                <a id="add"
-                    class="p-1 text-2xl text-white font-bold hover:shadow-sm hover:shadow-black focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-emerald-400 shadow-black shadow-inner"
-                    href="{{ route('commande.create') }}">Ajouter</a>
-            </div>
+
         </div>
     </x-slot>
 
@@ -52,6 +48,12 @@
             <thead>
                 <tr>
 
+
+                    <th
+                        class="px-5  py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        Numéro Devis
+                    </th>
+
                     <th
                         class="px-5  py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Client
@@ -71,8 +73,6 @@
                         Statut
                     </th>
 
-
-
                     <th
                         class="px-5 py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Actions
@@ -83,10 +83,13 @@
             <tbody>
                 @foreach ($commandes as $commande)
                     <tr class="" id="ligne-{{ $commande->id }}" class="">
+                        <td class="px-5 py-4 text-md text-center bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $commande->devis ? $commande->devis->id : 'DEVIS INTROUVABLE' }}</p>
+                        </td>
 
                         <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
                             <p class="text-gray-900 text-center whitespace-no-wrap">
-                                {{ $commande->devis->client->name . ' ' . $commande->devis->client->firstname }}</p>
+                        {{ $commande->devis?->client ? $commande->devis->client->name . ' ' . $commande->devis->client->firstname : 'CLIENT INTROUVABLE' }} </p>
                         </td>
                         <td class="px-5 py-4 text-md text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ number_format($commande->total , 0, ',', ' ') }}</p>
@@ -98,9 +101,6 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $commande->statut }}</p>
 
                         </td>
-
-
-
 
                         <td class="px-5 flex justify-center py-4 text-md bg-white border-b border-gray-200">
                             <button id="dropdownMenuIconButton-{{ $commande->id }}"
@@ -115,7 +115,6 @@
                             </button>
 
                         </td>
-
                     </tr>
 
                     <div id="dropdownDots-{{ $commande->id }}" tabindex="-1"
@@ -123,20 +122,19 @@
                         <ul class="py-2 text-md text-gray-700 dark:text-gray-200 "
                             aria-labelledby="dropdownMenuIconButton">
 
-
                             <li>
-                                <form id="supprimer-{{ $commande->id }}" method="post"
-                                    action="{{ route('commande.destroy', ['commande' => $commande]) }}">
-                                    @method('DELETE')
+                                <form id="payement-{{ $commande->id }}" method="get"
+                                    action="{{ route('facture.create', ['commande' => $commande]) }}">
+
                                     @csrf
-                                    <button data-modal-target="popup-modal-{{ $commande->id }}"
-                                        data-modal-toggle="popup-modal-{{ $commande->id }}" type="button"
-                                        class="block w-full text-center px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        data-id="{{ $commande->id }}">
-                                        Supprimer
+                                    <button
+                                         type="submit"
+                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Faire la facture
                                     </button>
                                 </form>
                             </li>
+
 
 
                             <li>
@@ -149,6 +147,19 @@
                                         class="block w-full {{ $commande->statut == 'Annulée' ? 'hidden' : '' }} text-center px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                         data-id="{{ $commande->id }}">
                                         Annuler
+                                    </button>
+                                </form>
+                            </li>
+                                                        <li>
+                                <form id="supprimer-{{ $commande->id }}" method="post"
+                                    action="{{ route('commande.destroy', ['commande' => $commande]) }}">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button data-modal-target="popup-modal-{{ $commande->id }}"
+                                        data-modal-toggle="popup-modal-{{ $commande->id }}" type="button"
+                                        class="block w-full text-center px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        data-id="{{ $commande->id }}">
+                                        Supprimer
                                     </button>
                                 </form>
                             </li>

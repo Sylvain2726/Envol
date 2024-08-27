@@ -1,5 +1,65 @@
 <x-app-layout>
 
+    <style>
+
+
+
+
+        .label-container {
+            position: fixed;
+            bottom: 48px;
+            right: 105px;
+            display: table;
+            visibility: hidden;
+        }
+
+        .label-text {
+            color: #FFF;
+            background: rgba(51, 51, 51, 0.5);
+            display: table-cell;
+            vertical-align: middle;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 20px
+        }
+
+        .label-arrow {
+            display: table-cell;
+            vertical-align: middle;
+            color: #333;
+            opacity: 0.5;
+        }
+
+        .float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: rgb(0, 204, 153);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 2px 2px 3px #999;
+        }
+
+        .my-float {
+            font-size: 24px;
+            margin-top: 18px;
+        }
+
+        a.float+div.label-container {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s ease;
+        }
+
+        a.float:hover+div.label-container {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+
     <x-slot name="header">
         <div class="flex flex-col md:flex-row md:justify-between md:items-center">
             <h1 class="text-3xl md:text-5xl py-4 ">{{ __('Gestion des Devis') }}</h1>
@@ -8,13 +68,23 @@
                     class="rounded-xl placeholder-emerald-500 ring ring-emerald-500 focus:ring focus:outline-none focus:border-red-600 p-2 border-none shadow-sm shadow-black"
                     name="search" id="search" value="{{ $request->search ?? '' }}" placeholder="Recherche">
             </form>
-            <div>
-                <a id="add"
-                    class="p-1 text-2xl text-white font-bold hover:shadow-sm hover:shadow-black focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-emerald-400 shadow-black shadow-inner"
-                    href="{{ route('devis.create') }}">Ajouter</a>
-            </div>
+
         </div>
     </x-slot>
+
+    <a href="{{ route('devis.create') }}" class="float flex justify-center hover:scale-105">
+
+        <svg class="w-6 h-6 text-white font-extrabold fa fa-plus my-float" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 12h14m-7 7V5" />
+        </svg>
+
+    </a>
+    <div class="label-container">
+        <div class="label-text">Ajouter</div>
+        <i class="fa fa-play label-arrow"></i>
+    </div>
 
     @if (session('success'))
         <div id="toast-success"
@@ -89,7 +159,7 @@
 
                         <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
                             <p class="text-gray-900 text-center whitespace-no-wrap">
-                                {{ $devis->client->name . ' ' . $devis->client->firstname }}</p>
+                              {{ $devis->client ? $devis->client->name . ' ' . $devis->client->firstname : ' CLIENT NON TROUVE'}} </p>
                         </td>
                         <td class="px-5 py-4 text-md text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ number_format($devis->total , 0, ',', ' ') }}</p>
@@ -133,7 +203,7 @@
                                 </button>
                             </form>
                             @else
-                                <p class="text-green-400 font-bold whitespace-no-wrap">Commande effectuée</p>
+                                <p class="text-green-500 font-bold whitespace-no-wrap">Commande effectuée</p>
                             @endif
 
                         </td>
@@ -149,7 +219,7 @@
                                     action="{{ route('devis.details', ['devi' => $devis]) }}">
                                     @csrf
                                     <button type="submit"
-                                        class="block px-4 w-full font-semibold text-center py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        class="block px-4 w-full font-semibold text-start py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                         Génerer le devis
                                     </button>
                                 </form>
@@ -160,8 +230,8 @@
                                     action="{{ route('devis.items', ['devi' => $devis]) }}">
                                     @csrf
                                     <button type="submit"
-                                        class="w-full text-center font-semibold px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        Items
+                                        class="w-full text-start font-semibold px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Détails
                                     </button>
                                 </form>
                             </li>
@@ -172,7 +242,7 @@
                                     @csrf
                                     <button data-modal-target="popup-modal-{{ $devis->id }}"
                                         data-modal-toggle="popup-modal-{{ $devis->id }}" type="button"
-                                        class="block w-full text-center px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        class="block w-full text-start px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                         data-id="{{ $devis->id }}">
                                         Supprimer
                                     </button>

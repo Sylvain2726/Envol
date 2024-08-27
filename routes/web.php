@@ -6,6 +6,7 @@ use App\Http\Controllers\DevisController;
 use App\Http\Controllers\DevisItemController;
 use App\Http\Controllers\EntreeController;
 use App\Http\Controllers\EquipementController;
+use App\Http\Controllers\FactureController;
 use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\SalleController;
 use App\Http\Controllers\UserController;
@@ -49,8 +50,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/items', [EntreeController::class, 'itemIndex'])->name('item.index');
     Route::get('/stock', [EquipementController::class, 'stock'])->name('equipement.stock');
     Route::get('/creation/commande{devi}' , [CommandeController::class, 'createCommande'])->name('commande.form');
-    Route::post('/commande/retour/{commande}', [CommandeController::class, 'retour'])->name('commande.retour');
+    Route::post('/commande/retour/', [CommandeController::class, 'retour'])->name('commande.retour');
     Route::post('/commande/annuler/{commande}', [CommandeController::class, 'annuler'])->name('commande.annuler');
+    Route::get('/creation/facture/{commande}', [FactureController::class ,'create'])->name('facture.create');
+    Route::post('/enregistre/facture/{commande}' , [FactureController::class, 'store'])->name('facture.store');
+    Route::get('/facture' , [FactureController::class, 'index'])->name('facture.index');
+    Route::delete('/facture/supprimer{facture}' , [FactureController::class, 'destroy'])->name('facture.destroy');
+    Route::get('/facture/gereration{facture}' , [FactureController::class, 'generer'])->name('facture.generer');
 
     Route::post('etape1/devis/store' , [DevisController::class, 'post_etape1'])->name('post.etape1');
     Route::get('etape2/devis/' , [DevisController::class, 'get_etape2'])->name('get.etape2');
