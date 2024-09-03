@@ -70,12 +70,19 @@
             </x-slot>
             {{ __('Commande') }}
         </x-nav-link>
-        
-        <x-nav-link href="{{ route('facture.index') }}" :active="request()->routeIs('facture.index', 'facture.create')">
+
+        <x-nav-link href="{{ route('facture.index') }}" :active="request()->routeIs('facture.index', 'facture.create' , 'facture.payements' , 'facture.createPayment')">
             <x-slot name="icon">
 
             </x-slot>
             {{ __('Facture') }}
+        </x-nav-link>
+
+        <x-nav-link href="{{ route('equipement.stock') }}" :active="request()->routeIs('equipement.stock')">
+            <x-slot name="icon">
+
+            </x-slot>
+            {{ __('Inventaire') }}
         </x-nav-link>
 
 
@@ -91,13 +98,6 @@
 
             </x-slot>
             {{ __('Equipements') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('equipement.stock') }}" :active="request()->routeIs('equipement.stock')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Inventaire') }}
         </x-nav-link>
 
         <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.*')">

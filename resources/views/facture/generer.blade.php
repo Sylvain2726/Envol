@@ -16,10 +16,10 @@
 
 
     <div class="flex justify-center items-center mt-5  ">
-        <h1 class="text-3xl font-semibold"> {{ $facture->numFacture }}</h1>
+        <h1 class="text-3xl font-semibold"> Facture  N°{{ $facture->numFacture }}</h1>
 
     </div>
-    <div class="flex justify-center items-center mt-10">
+    <div class="flex justify-center items-center mt-10 mb-5 gap-10">
         <svg class="bg-black/30 rounded-xl shadow-sm shadow-black max-w-sm" viewBox="0 0 2048 831"
         xmlns="http://www.w3.org/2000/svg">
         <path transform="translate(459,178)"
@@ -60,22 +60,30 @@
         <path transform="translate(777,180)" d="m0 0" fill="#1D99B4" />
         <path transform="translate(776,179)" d="m0 0" fill="#FEFEFE" />
     </svg>
+    <div class="flex flex-col ">
+        <p class="text-lg">Adresse : <span class="font-bold "> Hamdalaye ACI 2000</span> </p>
+        <p class="text-lg">Contact : <a href="tel:+223 20 21 18 01" class="font-bold">+223 20 21 18 01</a> </p>
+        <p class="text-lg">E-mail : <a href="mailto:contact@envoltechnology.com" class="font-bold">contact@envoltechnology.com</a> </p>
     </div>
+    </div>
+
+
+
     <div class="flex flex-col gap-5 justify-center mx-3 mb-10">
         <div class="flex items-center justify-between md:justify-start   gap-10 md:gap-32">
             <div class="flex flex-col gap-3">
                 <div class="">
                     <h1 class="text-md"> <span class="font-bold">Client :
-                        </span>{{ $commande->devis->client->name . ' ' . $commande->devis->client->firstname }}</h1>
+                        </span>{{ $commande->devis?->client?->name . ' ' . $commande->devis?->client?->firstname }}</h1>
                 </div>
                 <div class="">
-                    <h1 class="text-md"> <span class="font-bold">Numéro du client : </span>{{ $commande->devis->client->phone }}
+                    <h1 class="text-md"> <span class="font-bold">Numéro du client : </span>{{ $commande->devis?->client?->phone }}
                     </h1>
                 </div>
 
                 <div class="">
                     <h1 class="text-md"> <span class="font-bold">Adresse du client :
-                        </span>{{ $commande->devis->client->address }}</h1>
+                        </span>{{ $commande->devis?->client?->address }}</h1>
                 </div>
 
                 <div class="">
@@ -90,6 +98,9 @@
 
             <div class="flex">
                 <button id="imprimer" onclick="imprimer()" type="button" class="p-2 bg-emerald-400 rounded-lg shadow-sm shadow-black">Imprimer</button>
+
+                <a id="envoyer" class="p-2 bg-blue-500/70 rounded-lg mx-4 shadow-sm shadow-black" href="{{ route('facture.envoyer' , $facture) }}">Envoyer</a>
+
                 <a id="retour" class="p-2 bg-white rounded-lg mx-4 shadow-sm shadow-black" href="{{ route('facture.index') }}">Retour</a>
             </div>
         </div>
@@ -156,7 +167,7 @@
         </div>
         <div class="flex flex-col items-center shadow-sm rounded-xl shadow-black  py-2 bg-gray-200    mt-5 xs:flex-row xs:justify-between">
             <h1 class="text-2xl   text-blue-600 font-bold">Total de la facture
-                {{ number_format($facture->total, 2, ',', ' ') }} FCFA
+                {{ number_format($facture->commande->total, 2, ',', ' ') }} FCFA
             </h1>
         </div>
     </div>

@@ -165,7 +165,63 @@ class CommandeController extends Controller
      */
 public function update(Request $request, Commande $commande)
     {
+        //dd($request->item);
 
+        $request->validate([
+            'item.*.name'=>'required|string|exists:equipements,name',
+            'item.*.VPrice'=>'required|numeric',
+            'item.*.quantite'=>'required|integer|min:1,',
+            'item.*.type'=>'required|string|exists:equipements,type',
+            'item.*.item_id'=>'required|integer|exists:items,id',
+            'item.*.equipement_id'=>'required|integer|exists:equipements,id',
+
+
+        ] , [
+            'client_id.exists' => 'Le client pour cette commande n\'existe pas voici l\' identifiant : '. $request->client_id,
+            'item.*.name.exists' => 'Ce nom d\'equipement n\'existe pas.',
+            'item.*.type.exists' => 'Ce type d\'equipement n\'existe pas.',
+            'item.*.item_id.exists' => 'Choisissez une salle valide',
+        ]);
+       // dd($request->all());
+
+
+
+        foreach ($request->item as $item) {
+            $commande->commandeItems()->where('item_id', $item['item_id'])->update([
+                'quantite' => $item['quantite'],
+                'VPrice' => $item['VPrice'],
+                'total' => $item['quantite'] * $item['VPrice'],
+                'name' => $item['name'],
+                'type' => $item['type'],
+                'item_id' => $item['item_id'],
+                'equipement_id' => $item['equipement_id'],
+
+            ]);
+
+/*             $itemEntree = Item::query()->find($item['item_id']);
+            if ($itemEntree->quantite >= $item['quantite']) {
+
+               $itemEntree->quantite = $itemEntree->quantite -= $item['quantite'];
+               $itemEntree->save();
+            }else {
+
+                $commande->commandeItems()->delete();
+                $commande->delete();
+
+               return redirect()->route('commande.form' , ['devi' => $commande->devis])
+               ->with('error', 'Quantite insuffisante pour  '.$item['name']. 'il n\'y a que '.$itemEntree->quantite.' disponible dans cette salle');
+            } */
+
+        }
+
+        $commande->total = $commande->commandeItems()->sum('total');
+        //$commande->devis->statut = 1;
+        //$commande->devis->save();
+
+        $commande->save();
+
+
+        return redirect()->route('commande.items' , $commande)->with('success', 'Commande modifiée avec succes');
 
     }
 
@@ -173,11 +229,21 @@ public function update(Request $request, Commande $commande)
        return redirect()->route('devis.index');
     }
 
+    public function detailCommande(Commande $commande){
+
+        $items = $commande->commandeItems()->get();
+        $equipements = Equipement::all();
+        return view('commande.item' , compact('items' , 'commande' , 'equipements'));
+
+
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Commande $commande)
     {
+        //dd($commande->facture);
         if ($commande->statut == 'En cours') {
             foreach ($commande->commandeItems as $commandeItem) {
                 $itemEntree = Item::query()->find($commandeItem->item_id);
@@ -190,6 +256,7 @@ public function update(Request $request, Commande $commande)
         }
 
         $commande->commandeItems()->delete();
+        $commande->facture()->delete();
         $commande->delete();
         $commande->devis?  $commande->devis->statut = 0: '' ;
         $commande->devis->save();

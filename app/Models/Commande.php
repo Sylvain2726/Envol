@@ -14,17 +14,29 @@ class Commande extends Model
         'client_id',
     ];
 
+
     public function devis()
     {
         return $this->belongsTo(Devis::class);
     }
 
+
     public function commandeItems(){
         return $this->hasMany(CommandeItem::class);
     }
 
+
     public function facture(){
-        return $this->belongsTo(Facture::class);
+        return $this->hasOne(Facture::class);
+    }
+
+    /**
+     * Obtenir la livraison qui est associée à la commande.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function livraison(){
+        return $this->hasOne(Livraison::class);
     }
 
 }

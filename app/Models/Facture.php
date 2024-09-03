@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Facture extends Model
 {
@@ -32,4 +34,15 @@ class Facture extends Model
     public function commande(){
         return $this->belongsTo(Commande::class);
     }
+
+    /**
+         * Avori tous les payement de la  facture
+         *
+         * @return \Illuminate\Database\Eloquent\Relations\HasMany
+         */
+        public function payemants(): HasMany
+        {
+            return $this->hasMany(Payement::class);
+        }
+
 }

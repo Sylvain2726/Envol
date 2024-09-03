@@ -89,7 +89,7 @@
 
                         <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
                             <p class="text-gray-900 text-center whitespace-no-wrap">
-                        {{ $commande->devis?->client ? $commande->devis->client->name . ' ' . $commande->devis->client->firstname : 'CLIENT INTROUVABLE' }} </p>
+                        {{ $commande->devis?->client ? $commande->devis?->client->name . ' ' . $commande->devis?->client->firstname : 'CLIENT INTROUVABLE' }} </p>
                         </td>
                         <td class="px-5 py-4 text-md text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ number_format($commande->total , 0, ',', ' ') }}</p>
@@ -118,13 +118,26 @@
                     </tr>
 
                     <div id="dropdownDots-{{ $commande->id }}" tabindex="-1"
-                        class="z-10 hidden bg-gray-200 divide-y divide-gray-300 rounded-lg shadow   w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        class="z-10 hidden bg-gray-200 divide-y divide-gray-300 rounded-lg shadow    dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-md text-gray-700 dark:text-gray-200 "
                             aria-labelledby="dropdownMenuIconButton">
 
                             <li>
                                 <form id="payement-{{ $commande->id }}" method="get"
-                                    action="{{ route('facture.create', ['commande' => $commande]) }}">
+                                    action="{{ route('commande.items', ['commande' => $commande]) }}">
+
+                                    @csrf
+                                    <button
+                                         type="submit"
+                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Détails
+                                    </button>
+                                </form>
+                            </li>
+                            @if (!$commande->facture)
+                            <li>
+                                <form id="payement-{{ $commande->id }}" method="post"
+                                    action="{{ route('facture.store', ['commande' => $commande]) }}">
 
                                     @csrf
                                     <button
@@ -135,6 +148,36 @@
                                 </form>
                             </li>
 
+                            @endif
+
+                            <li>
+                                <form id="payement-{{ $commande->id }}" method="get"
+                                    action="{{ route('commande.livraison', ['commande' => $commande]) }}">
+                                    @csrf
+                                    <button
+
+                                         type="submit"
+                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Faire un bordereaux de livraison
+                                    </button>
+                                </form>
+                            </li>
+
+                            <li>
+                                <form id="payement-{{ $commande->id }}" method="get"
+                                    action="{{ route('voir.livraison', ['commande' => $livraison = $commande]) }}">
+                                    @csrf
+                                    <button
+
+                                        type="submit"
+                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Voir le bordereaux
+                                    </button>
+                                </form>
+                            </li>
+
+
+
 
 
                             <li>
@@ -144,20 +187,20 @@
                                     @csrf
                                     <button data-modal-target="popup-modal-annuler-{{ $commande->id }}"
                                         data-modal-toggle="popup-modal-annuler-{{ $commande->id }}" type="button"
-                                        class="block w-full {{ $commande->statut == 'Annulée' ? 'hidden' : '' }} text-center px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        class="block w-full {{ $commande->statut == 'Annulée' ? 'hidden' : '' }} text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                         data-id="{{ $commande->id }}">
                                         Annuler
                                     </button>
                                 </form>
                             </li>
-                                                        <li>
+                            <li>
                                 <form id="supprimer-{{ $commande->id }}" method="post"
                                     action="{{ route('commande.destroy', ['commande' => $commande]) }}">
                                     @method('DELETE')
                                     @csrf
                                     <button data-modal-target="popup-modal-{{ $commande->id }}"
                                         data-modal-toggle="popup-modal-{{ $commande->id }}" type="button"
-                                        class="block w-full text-center px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        class="block w-full text-start px-4 py-2 text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                         data-id="{{ $commande->id }}">
                                         Supprimer
                                     </button>
