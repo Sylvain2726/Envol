@@ -50,27 +50,27 @@
             <thead>
                 <tr>
                     <th
-                        class="px-5  py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        class="px-5  py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Prénom
                     </th>
                     <th
-                        class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Nom
                     </th>
                     <th
-                        class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Tel
                     </th>
                     <th
-                        class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Email
                     </th>
 
                     <th
-                        class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                        class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Adresse
                     </th>
-                    <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                    <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                         Actions
                     </th>
                 </tr>
@@ -78,19 +78,19 @@
             <tbody>
                 @foreach ($clients as $client)
                     <tr class=" " id="ligne-{{ $client->id }}">
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $client->firstname }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $client->name }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $client->phone }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $client->email }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $client->address }}</p>
                         </td>
 
@@ -125,19 +125,23 @@
                                 </form>
                             </li>
 
-                            <li>
-                                <form id="supprimer-{{ $client->id }}" method="post"
-                                    action="{{ route('client.destroy', ['client' => $client]) }}">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button  data-modal-target="popup-modal-{{ $client->id }}"
-                                        data-modal-toggle="popup-modal-{{ $client->id }}" type="button"
-                                        class="block px-4 w-full text-red-500 font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
 
-                                       Supprimer
-                                    </button>
-                                </form>
-                            </li>
+
+                            @can('Supprimer un client')
+                                <li>
+                                    <form id="supprimer-{{ $client->id }}" method="post"
+                                        action="{{ route('client.destroy', ['client' => $client]) }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button  data-modal-target="popup-modal-{{ $client->id }}"
+                                            data-modal-toggle="popup-modal-{{ $client->id }}" type="button"
+                                            class="block px-4 w-full text-red-500 font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" >
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </li>
+                            @endcan
+
 
 
 
@@ -173,7 +177,7 @@
                                         Oui
                                     </button>
                                     <button data-modal-hide="popup-modal-{{ $client->id }}" type="button"
-                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
+                                        class="py-2.5 px-5 ms-3 text-lg font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
                                 </div>
                             </div>
                         </div>
@@ -186,6 +190,8 @@
         </div>
     </div>
     <script>
+
+
 
         const search = document.getElementById('search')
         search.addEventListener('keyup', () => {

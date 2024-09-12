@@ -26,9 +26,9 @@ class MagasinFormRequest extends FormRequest
     public function rules(): array
 
     {
-        $magasin = $this->route('magasin');
+
         return [
-            'name' => ['required', 'string', 'max:255' , Rule::unique('magasins')->ignore($magasin)],
+            'name' => ['required', 'string', 'max:255' , Rule::unique('magasins')->ignore($this->route('magasin'))],
             'address' => ['required', 'string', 'max:255'],
         ];
     }

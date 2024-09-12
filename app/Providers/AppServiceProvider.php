@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Entree;
+use App\Policies\EntreePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 

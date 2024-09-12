@@ -1,8 +1,6 @@
 <x-app-layout>
 
-
     <span class="sr-only">Loading...</span>
-    </div>
 
     <div id="etape2affichage"
         class="flex justify-center items-start h-screen animate__animated mx-4 mb animate__fadeInRight animate__slow">
@@ -37,21 +35,17 @@
                                 d="m7 9 4-4-4-4M1 9l4-4-4-4" />
                         </svg>
                     </li>
-
                 </ol>
 
                 <form class="space-y-5 " method="POST" action="{{ route('post.etape2') }}">
                     @csrf
-
 
                     <div>
                         <button onclick="displayForm()" type="button"
                             class="text-white bg-blue-700  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 mx-2 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Ajouter un equipement
                         </button>
-
                     </div>
-
 
                     <div id="div">
                         <div id="equipementDiv" class="space-y-9 animate__animated animate__fadeInRightBig ">
@@ -62,8 +56,8 @@
                                 name="equipements[0][equipement_id]" id="equipementSelect">
                                 <option value="default">Choisir un équipement</option>
                                 @foreach ($equipements as $equipement)
-                                    @foreach ($equipement->items as $item )
-                                        <option value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id . ' | Salle : '. $item->salle?->name }}</option>
+                                    @foreach ($equipement->items()->orderBy('entree_id' , 'asc')->where('quantite' , '>' , 0)->get() as $item )
+                                        <option class="font-semibold text-md" value="{{ $item->id }}">{{ $equipement->name.' | Numéro entrée : '. $item->entree_id .' | ' . $item->salle?->magasin?->name. '-'. $item->salle?->name.' | PA : '. number_format($item->Aprice , 0 , ',' , ' '). ' FCFA' }}</option>
                                     @endforeach
                                 @endforeach
                             </select>
@@ -120,11 +114,10 @@
                         <a id="btnRetoure" href="{{ url()->previous() }}">Retoure</a>
                         <button type="submit"
                             class="text-white bg-blue-700 mt-2 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 m-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Prochaine étape
+                            Terminer
                         </button>
 
                     </div>
-
                 </form>
             </div>
         </div>
@@ -167,6 +160,7 @@
                             document.querySelector('#VPrice').value = data.VPrice;
                             document.querySelector('#stock').value = stock;
                             document.querySelector('#type').value = data.type;
+
 
                             qte.addEventListener('change', () => {
 

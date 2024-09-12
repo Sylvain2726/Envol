@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\enum\PermissionsEnum;
 use App\Models\Commande;
 use App\Models\CommandeItem;
 use App\Models\Devis;
@@ -9,65 +10,62 @@ use App\Models\Equipement;
 use App\Models\Item;
 use App\Models\Magasin;
 use App\Models\Salle;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommandeController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Affiche la liste de toutes les commandes
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $commandes = Commande::query()->with('commandeItems')->get();
-/*
-       Commande::with('commandeItems')->delete();
-       CommandeItem::with('commande')->delete(); */
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
 
-
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
+        $commandes = Commande::query()->with('commandeItems')->orderBy('created_at', 'desc')->paginate(6);
 
        return view('commande.index', compact('commandes'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
 
         $magasins = Magasin::all();
 
         return view('commande.create' , compact('magasins'));
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Crée une commande à partir d'un devis.
+     *
+     * @param Devis $devi le devis à transformer en commande
+     * @return \Illuminate\Http\Response
      */
     public function createCommande(Devis $devi)
     {
-        $commande = $devi;
-/*       $commande = new Commande();
-      $commande->devis_id = $devi->id;
-      $commande->client_id = $devi->client_id;
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
 
-      $commande->save();
-
-      foreach ($devi->devisItems as $item) {
-
-          $commande->commandeItems()->create([
-
-            'item_id' => $item->item_id,
-            'quantite' => $item->quantite,
-            'total' => $item->total,
-            'name' => $item->name,
-            'type' => $item->type,
-            'VPrice' => $item->VPrice,
-            'equipement_id' => $item->equipement_id,
-
-          ]); */
-
-          //$commande->commandeItems()->associate($commandeItem);
-          //$commandeItems = $commande->commandeItems()->get();
-
-          //$listeItems = Item::all();
-
-
-
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
+      $commande = $devi;
       $equipements = Equipement::all();
       $salles = Salle::all();
 
@@ -75,11 +73,21 @@ class CommandeController extends Controller
       return view('commande.confirme' , compact('devi' , 'commande' , 'equipements' ,'salles'));
     }
 
+
     /**
      * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
+
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
 
 
         $request->validate([
@@ -145,27 +153,15 @@ class CommandeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
 public function update(Request $request, Commande $commande)
     {
-        //dd($request->item);
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
 
         $request->validate([
             'item.*.name'=>'required|string|exists:equipements,name',
@@ -182,54 +178,80 @@ public function update(Request $request, Commande $commande)
             'item.*.type.exists' => 'Ce type d\'equipement n\'existe pas.',
             'item.*.item_id.exists' => 'Choisissez une salle valide',
         ]);
-       // dd($request->all());
+
+
+            foreach ($commande->commandeItems as $ligneComande) {
+
+                foreach ($request->item as $item) {
+                    $itemEntree = Item::query()->find($item['item_id']);
+
+/*                     if ($item['quantite'] * 1 > $itemEntree->quantite) {
+                        return redirect()->route('commande.items' , $commande)->with('error', 'Quantite insuffisante pour  '.$item['name']. ' il n\'y a que '.$itemEntree->quantite.' disponible dans cette salle');
+                    } */
+
+                    //dd($itemEntree->quantite , $item['quantite'] * 1 , $ligneComande->quantite);
+
+                   // dd($itemEntree->quantite , $item['quantite'] * 1 , $ligneComande->quantite , $ligneComande->quantite - ($item['quantite'] * 1));
+
+                    $commande->commandeItems()->where('item_id', $item['item_id'])->update([
+                        'quantite' => $item['quantite'] * 1,
+                        'VPrice' => $item['VPrice'],
+                        'total' => $item['quantite'] * $item['VPrice'],
+                        'name' => $item['name'],
+                        'type' => $item['type'],
+                        'item_id' => $item['item_id'],
+                        'equipement_id' => $item['equipement_id'],
+
+                    ]);
+
+                    if ($ligneComande->quantite > $item['quantite'] * 1 ) {
+                        // Si la nouvelle quantité est inférieure à l'ancienne, on ajoute la différence au stock
+                        $stock = $ligneComande->quantite - $item['quantite'] * 1;
+                        $itemEntree->update(['quantite' => $itemEntree->quantite + $stock]);
+                    } elseif ($ligneComande->quantite < $item['quantite'] * 1) {
+                        // Si la nouvelle quantité est supérieure à l'ancienne, on retire la différence du stock
+                        $stock = $item['quantite'] * 1 - $ligneComande->quantite;
+                        $itemEntree->update(['quantite' => $itemEntree->quantite - $stock]);
+                    }
+
+
+                }
+
+            }
 
 
 
-        foreach ($request->item as $item) {
-            $commande->commandeItems()->where('item_id', $item['item_id'])->update([
-                'quantite' => $item['quantite'],
-                'VPrice' => $item['VPrice'],
-                'total' => $item['quantite'] * $item['VPrice'],
-                'name' => $item['name'],
-                'type' => $item['type'],
-                'item_id' => $item['item_id'],
-                'equipement_id' => $item['equipement_id'],
-
-            ]);
-
-/*             $itemEntree = Item::query()->find($item['item_id']);
-            if ($itemEntree->quantite >= $item['quantite']) {
-
-               $itemEntree->quantite = $itemEntree->quantite -= $item['quantite'];
-               $itemEntree->save();
-            }else {
-
-                $commande->commandeItems()->delete();
-                $commande->delete();
-
-               return redirect()->route('commande.form' , ['devi' => $commande->devis])
-               ->with('error', 'Quantite insuffisante pour  '.$item['name']. 'il n\'y a que '.$itemEntree->quantite.' disponible dans cette salle');
-            } */
-
-        }
+       // $commandeItem->save();
 
         $commande->total = $commande->commandeItems()->sum('total');
-        //$commande->devis->statut = 1;
-        //$commande->devis->save();
-
         $commande->save();
-
-
         return redirect()->route('commande.items' , $commande)->with('success', 'Commande modifiée avec succes');
 
     }
 
+
+
+    /**
+     * Retourne a la liste des devis
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function retour(){
        return redirect()->route('devis.index');
     }
 
+
+    /**
+     * Affiche les details d'une commande
+     * @param Commande $commande
+     * @return \Illuminate\Contracts\View\View
+     */
     public function detailCommande(Commande $commande){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_COMMANDES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les commandes.');
+       }
 
         $items = $commande->commandeItems()->get();
         $equipements = Equipement::all();
@@ -238,12 +260,24 @@ public function update(Request $request, Commande $commande)
 
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Supprime une commande
+     *
+     * Si la commande est en cours, remet les quantités des items
+     * correspondants à leur valeur d'origine et met à jour le statut
+     * du devis associé.
+     *
+     * @param Commande $commande la commande à supprimer
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Commande $commande)
     {
-        //dd($commande->facture);
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_COMMANDE->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de supprimer les commandes.');
+       }
         if ($commande->statut == 'En cours') {
             foreach ($commande->commandeItems as $commandeItem) {
                 $itemEntree = Item::query()->find($commandeItem->item_id);
@@ -263,7 +297,22 @@ public function update(Request $request, Commande $commande)
         return redirect()->route('commande.index');
     }
 
+    /**
+     * Annule une commande
+     *
+     * Si la commande est en cours, remet les quantités des items
+     * correspondants à leur valeur d'origine et met à jour le statut
+     * du devis associé.
+     *
+     * @param Commande $commande la commande à annuler
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function annuler(Commande $commande){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_COMMANDE->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission d\'annuler une commande.');
+       }
         foreach ($commande->commandeItems as $commandeItem) {
             $itemEntree = Item::query()->find($commandeItem->item_id);
             $itemEntree->quantite = $itemEntree->quantite + $commandeItem->quantite;

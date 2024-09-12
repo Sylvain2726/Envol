@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\enum\PermissionsEnum;
+use App\enum\RoleEnum;
+use App\Events\UserModified;
 use App\Http\Requests\ClientFormRequest;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Can;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 
 use function Ramsey\Uuid\v1;
 
@@ -16,6 +25,16 @@ class ClientController extends Controller
      */
     public function index(Request $request): View
     {
+       
+         $user = User::find(Auth::user()->id) ;
+
+
+         if (!$user->can(PermissionsEnum::GERER_CLIENTS->value)) {
+
+            abort(403, 'Vous n\'avez pas la permission de gérer les clients.');
+        }
+
+
         $clients = Client::query()
             //Grace à la methode where et orwhere on va filtrer la recherche sur les differents champs de  la BD
             ->where('firstname', 'like', "%" . $request->input('search') . "%")
@@ -23,7 +42,10 @@ class ClientController extends Controller
             ->orwhere('phone', 'like', "%" . $request->input('search') . "%")
             ->orwhere('email', 'like', "%" . $request->input('search') . "%")
             ->orWhere('address', 'like', "%" . $request->input('search') . "%")
-            ->paginate();
+            ->orderBy('created_at', 'desc')->paginate();
+
+
+
         return view('client.index', compact('clients', 'request'));
     }
 
@@ -32,6 +54,14 @@ class ClientController extends Controller
      */
     public function create(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
+        $user = User::find(Auth::user()->id) ;
+
+
+        if (!$user->can(PermissionsEnum::GERER_CLIENTS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les clients.');
+       }
+
         return view('client.create');
     }
 
@@ -40,7 +70,15 @@ class ClientController extends Controller
      */
     public function store(ClientFormRequest $request)
     {
-        Client::create($request->validated());
+        $user = User::find(Auth::user()->id) ;
+
+
+        if (!$user->can(PermissionsEnum::GERER_CLIENTS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les clients.');
+       }
+        $client = Client::create($request->validated());
+
         return redirect()->route('client.index')->with('success', 'Client a bien été enregistré.');
     }
 
@@ -51,6 +89,13 @@ class ClientController extends Controller
     public function edit(Client $client)
 
     {
+        $user = User::find(Auth::user()->id) ;
+
+
+        if (!$user->can(PermissionsEnum::GERER_CLIENTS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier un client.');
+       }
         //dd($client);
         return view('client.edit', compact('client'));
     }
@@ -60,6 +105,10 @@ class ClientController extends Controller
      */
     public function update(Client $client, ClientFormRequest $request)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_CLIENTS->value)) {
+            abort(403, 'Vous n\'avez pas la permission de modifier un client.');
+        }
 
 
         $client->update($request->validated());
@@ -72,6 +121,11 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_CLIENT->value)) {
+
+            abort(403, 'Vous ne pouver pas supprimer un client, seul les administrateurs peuvent le faire.');
+        }
         $client->delete();
         return redirect()->route('client.index');
     }

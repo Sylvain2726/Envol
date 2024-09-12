@@ -27,7 +27,7 @@ class EquipementFormRequest extends FormRequest
 
 
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string' , Rule::unique('equipements')->ignore($this->route('equipement'))],
             'type' => ['required', 'string'],
             'Vprice'=>'numeric|min:1'
 

@@ -1,4 +1,24 @@
 <x-guest-layout>
+
+                <!-- Session Status -->
+                @if (session('error'))
+                <div id="toast-success"
+                    class="flex items-center w-full  p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+                    role="alert">
+
+                    <div class="ms-3 text-md font-bold">{{ session('error') }}.</div>
+                    <button type="button"
+                        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                        data-dismiss-target="#toast-success" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
     <svg class="bg-zinc-500/0 shadow-black  animate-pulse   rounded-full" viewBox="0 0 2048 831" xmlns="http://www.w3.org/2000/svg">
         <path transform="translate(459,178)" d="m0 0 4 2 11 11 8 7 7 7 3 2v2l4 2 14 14 8 7 10 10 8 7 10 10 8 7 11 11 8 7 10 10 8 7 11 11 8 7 10 10 8 7 11 11 8 7 10 10 8 7 10 10 8 7 7 7 1-211h32v283l-7-6-10-9-8-8-8-7-9-9-8-7-8-8-8-7-10-10-8-7-8-8-8-7-13-13-8-7-17-16-11-11-8-7-17-16-11-11-8-7-10-10-8-7-10-10-7-6-1 208h-34l-1-1z" fill="#FEFEFE"/>
         <path transform="translate(1455,169)" d="m0 0h28l24 3 19 5 16 6 19 10 17 12 13 12 11 12 7 10 9 15 6 15 5 18 2 12v28l-3 18-6 20-9 19-10 15-9 11-8 9-8 7-16 12-21 11-24 8-24 4-11 1h-26l-21-3-20-5-25-10-14-8-14-10-13-12-9-9-11-15-9-16-6-16-4-17-2-19v-10l2-19 5-19 6-16 11-20 10-13 9-10 10-10 15-11 16-9 16-7 21-6zm0 27-20 4-18 6-16 8-15 10-10 9-5 4-9 11-9 14-5 10-5 15-2 12v29l4 20 6 16 8 15 9 12 9 10 14 11 15 9 20 8 16 4 16 2h22l21-3 20-6 21-10 14-10 12-11 11-13 9-15 6-14 4-16 2-17-1-20-5-21-6-15-8-13-9-11-13-13-17-12-16-8-16-6-18-4-7-1z" fill="#FEFEFE"/>
@@ -22,36 +42,9 @@
     </svg>
 
 
-
     <form  method="POST" action="{{ route('login') }}" class="mt-4 ">
 
-            <!-- Session Status -->
-    @if (session('status'))
-    <div id="toast-success"
-        class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
-        role="alert">
-        <div
-            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-            </svg>
-            <span class="sr-only">Check icon</span>
-        </div>
-        <div class="ms-3 text-md font-bold">{{ session('status') }}.</div>
-        <button type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-            data-dismiss-target="#toast-success" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 14 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-            </svg>
-        </button>
-    </div>
-@endif
+
     @csrf
 
         <!-- Email Address -->

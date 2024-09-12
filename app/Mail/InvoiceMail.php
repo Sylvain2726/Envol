@@ -52,7 +52,7 @@ class InvoiceMail extends Mailable
     public function attachments(): array
     {
 
-        $pdf = Pdf::loadView('facture.envoie', ['facture' => $this->facture, 'items' => $this->facture->commande->commandeItems]);
+        $pdf = Pdf::loadView('facture.pdf', ['facture' => $this->facture, 'items' => $this->facture->commande->commandeItems]);
 
         return [
 

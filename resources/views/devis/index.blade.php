@@ -143,14 +143,15 @@
                         Créer par
                     </th>
 
-                    <th
-                        class="px-5 py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                        Actions
-                    </th>
+
                     <th
                     class="px-5 py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                    Commande
-                </th>
+                        Commande
+                    </th>
+                <th
+                class="px-5 py-4 text-xs font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                Actions
+            </th>
                 </tr>
             </thead>
             <tbody>
@@ -175,6 +176,21 @@
                         <td class="px-5 py-4 text-md text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 text-center whitespace-no-wrap">{{ $devis->user->name }}</p>
                         </td>
+                        <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
+                            @if (!$devis->statut)
+                            <form id="detail-{{ $devis->id }}" method="get"
+                                action="{{ route('commande.form', ['devi' => $devis]) }}">
+                                @csrf
+                                <button type="submit"
+                                class="px-1 py-1.5 text-md bg-zinc-200/70 hover:bg-zinc-300  transition duration-500  rounded-lg shadow-sm shadow-black">
+                                <span class="material-symbols-outlined">Créer la commande</span>
+                                </button>
+                            </form>
+                            @else
+                                <p class="text-green-500 font-bold whitespace-no-wrap">Commande effectuée</p>
+                            @endif
+
+                        </td>
 
 
                         <td class="px-5 flex justify-center py-4 text-md bg-white border-b border-gray-200">
@@ -192,21 +208,7 @@
                         </td>
 
 
-                        <td class="px-5 py-4 text-md bg-white border-b border-gray-200">
-                            @if (!$devis->statut)
-                            <form id="detail-{{ $devis->id }}" method="get"
-                                action="{{ route('commande.form', ['devi' => $devis]) }}">
-                                @csrf
-                                <button type="submit"
-                                class="px-1 py-1.5 text-md bg-zinc-200/70 hover:bg-zinc-300  transition duration-500  rounded-lg shadow-sm shadow-black">
-                                <span class="material-symbols-outlined">Créer la commande</span>
-                                </button>
-                            </form>
-                            @else
-                                <p class="text-green-500 font-bold whitespace-no-wrap">Commande effectuée</p>
-                            @endif
 
-                        </td>
 
                     </tr>
 
@@ -290,6 +292,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            {{ $deviss->links() }}
+        </div>
     </div>
     <script>
         const success = document.getElementById('success')

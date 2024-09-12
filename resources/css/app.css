@@ -1,6 +1,10 @@
+@import 'tom-select/dist/css/tom-select.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 .bg
 {
@@ -9,4 +13,59 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.bg-entree {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Par exemple, pour couvrir toute la hauteur de la fenêtre */
+}
+
+.bg-entree::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background-image: url('entree.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.7; /* Ajuste cette valeur pour l'opacité */
+    z-index: 1;
+}
+
+.bg-entree > * {
+    position: relative;
+    z-index: 2; /* Assure-toi que le contenu reste au-dessus de l'overlay */
+}
+
+
+.entree-bg {
+    position: relative;
+    background-image: url('image-blanc.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Taille et hauteur pour s'assurer que l'overlay couvre toute la zone */
+ /* Par exemple, pour couvrir toute la hauteur de la fenêtre */
+}
+
+.entree-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.01); /* Change la couleur et l'opacité selon tes besoins */
+    z-index: 1;
+}
+
+.entree-bg > * {
+    position: relative;
+    z-index: 2; /* Assure-toi que les autres contenus soient au-dessus de l'overlay */
+}
+
 

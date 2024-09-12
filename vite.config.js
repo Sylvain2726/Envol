@@ -12,6 +12,10 @@ export default defineConfig({
         }),
     ],
 
+    alias: {
+        'pagedone': 'node_modules/pagedone/dist/pagedone.js'
+    }
+
 /*     server: {
         host: '0.0.0.0',
         port: 5173,

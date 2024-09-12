@@ -15,7 +15,7 @@
     </x-slot>
 
     @if(session('success'))
-        <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+        <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white text-center rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
@@ -23,7 +23,7 @@
                 <span class="sr-only">Check icon</span>
             </div>
             <div class="ms-3 text-md font-bold">{{session('success')}}.</div>
-            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
                 <span class="sr-only">Close</span>
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -45,10 +45,10 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
                     <h3 class="mb-5 text-md font-normal text-gray-500 dark:text-gray-400">Vous ête sûr de supprimer ce équipement ?</h3>
-                    <button data-modal-hide="popup-modal" type="submit" form="supprimer" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-md inline-flex items-center px-5 py-2.5 text-center">
+                    <button data-modal-hide="popup-modal" type="submit" form="supprimer" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-md inline-flex items-center px-3 py-2.5 text-center">
                         Oui
                     </button>
-                    <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
+                    <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-3 ms-3 text-md font-medium text-gray-900 focus:outline-none bg-white text-center rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
                 </div>
             </div>
         </div>
@@ -59,24 +59,22 @@
         <table class="min-w-full leading-normal text-nowrap">
             <thead>
             <tr>
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                <th class="px-3 py-3 text-md font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Nom
                 </th>
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                <th class="px-3 py-3 text-md font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Type
                 </th>
 
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                <th class="px-3 py-3 text-md font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Prix de vente
                 </th>
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
-                    Prix d'achat
-                </th>
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+
+                <th class="px-3 py-3 text-md font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Quantité en stock
                 </th>
 
-                <th class="px-5 py-3 text-md font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
+                <th class="px-3 py-3 text-md font-bold tracking-wider text-center text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">
                     Répartition par magasin
                 </th>
 
@@ -86,26 +84,26 @@
             <tbody>
             @foreach($equipements as $equipement)
                 <tr>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
+                    <td class="px-3 py-3 text-md bg-white text-center border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->name}}</p>
                     </td>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
+                    <td class="px-3 py-3 text-md bg-white text-center border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->type}}</p>
                     </td>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
+                    <td class="px-3 py-3 text-md bg-white text-center border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->VPrice}}</p>
                     </td>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->APrice??'Pas scpécifier'}}</p>
-                    </td>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
+
+                    <td class="px-3 py-3 text-md bg-white text-center border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">{{ $equipement->getStock()}}</p>
                     </td>
-                    <td class="px-5 py-3 text-md bg-white border-b border-gray-200">
+                    <td class="px-3 py-3 text-md bg-white text-center border-b border-gray-200">
                         <p class="text-gray-900 whitespace-no-wrap">
-                            @foreach ($equipement->items->where('quantite' , '>' , 0) as $item)
-                            <p>{{ $item->salle?->magasin?->name. ' '. $item->salle?->name. ' : '.$item->quantite. ' '.$item->equipement->name }}</p>
-                            @endforeach
+                            @foreach ($salles as $salle)
+
+                            <p class="font-semibold">{{ $salle->magasin->name.' '.$salle->name. ' : '.$salle->getStock($equipement->id). ' '.$equipement->name}}</p>
+
+                          @endforeach
                         </p>
                     </td>
                 </tr>
@@ -113,7 +111,7 @@
             </tbody>
         </table>
 
-        <div class="flex flex-col items-center px-5 py-5 bg-white border-t xs:flex-row xs:justify-between">
+        <div class="flex flex-col items-center px-3 py-5 bg-white text-center border-t xs:flex-row xs:justify-between">
             {{ $equipements->links()}}
         </div>
     </div>

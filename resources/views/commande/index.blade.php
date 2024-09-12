@@ -150,33 +150,33 @@
 
                             @endif
 
-                            <li>
-                                <form id="payement-{{ $commande->id }}" method="get"
-                                    action="{{ route('commande.livraison', ['commande' => $commande]) }}">
-                                    @csrf
-                                    <button
+                            @if ($commande->statut != 'Annulée')
+                                <li>
+                                    <form id="payement-{{ $commande->id }}" method="get"
+                                        action="{{ route('commande.livraison', ['commande' => $commande]) }}">
+                                        @csrf
+                                        <button
 
-                                         type="submit"
-                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        Faire un bordereaux de livraison
-                                    </button>
-                                </form>
-                            </li>
+                                            type="submit"
+                                            class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Faire un bordereaux de livraison
+                                        </button>
+                                    </form>
+                                </li>
+                                
+                                <li>
+                                    <form id="payement-{{ $commande->id }}" method="get"
+                                        action="{{ route('voir.livraison', ['commande' => $livraison = $commande]) }}">
+                                        @csrf
+                                        <button
 
-                            <li>
-                                <form id="payement-{{ $commande->id }}" method="get"
-                                    action="{{ route('voir.livraison', ['commande' => $livraison = $commande]) }}">
-                                    @csrf
-                                    <button
-
-                                        type="submit"
-                                        class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        Voir le bordereaux
-                                    </button>
-                                </form>
-                            </li>
-
-
+                                            type="submit"
+                                            class="block w-full text-start px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Voir le bordereaux
+                                        </button>
+                                    </form>
+                                </li>
+                            @endif
 
 
 
@@ -208,7 +208,6 @@
                             </li>
                         </ul>
                     </div>
-
 
                     <div id="popup-modal-annuler-{{ $commande->id }}" tabindex="-1"
                         class="hidden overflow-y-auto  overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -286,6 +285,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div>
+            {{ $commandes->links() }}
+        </div>
     </div>
     <script>
         const success = document.getElementById('success')

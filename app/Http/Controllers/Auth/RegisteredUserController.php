@@ -43,8 +43,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        return redirect()->route('login')->with(['error' => 'Compte créer avec succès attender une autorisation d\'accès de l\'administrateur merci !']);
 
-        return redirect(route('dashboard', absolute: false));
     }
 }

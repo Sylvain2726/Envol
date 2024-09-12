@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\enum\PermissionsEnum;
 use App\Models\DevisItem;
 use App\Models\Equipement;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DevisItemController extends Controller
 {
 
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
 
     public function edit(DevisItem $itemDevi)
     {
-        //dd($itemDevi);
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_DEVIS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les devis.');
+       }
 
         $equipements = Equipement::all();
         return view('devis.itemUpdate' , compact('itemDevi' , 'equipements'));
@@ -30,6 +28,11 @@ class DevisItemController extends Controller
 
     public function update(Request $request, DevisItem $itemDevi)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_DEVIS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les devis.');
+       }
         $request->validate([
             'name'=>'required|string|exists:equipements,name',
             'VPrice'=>'required|numeric',
@@ -54,6 +57,11 @@ class DevisItemController extends Controller
 
     public function destroy(DevisItem $itemDevi)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_DEVIS->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission supprrimer les détais d\'un devis.');
+       }
 
         $devis = $itemDevi->devis;
         $itemDevi->delete();

@@ -2,27 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\enum\PermissionsEnum;
 use App\Http\Requests\EntreeFormRequest;
 use App\Models\Entree;
 use App\Models\Equipement;
 use App\Models\Item;
 use App\Models\Magasin;
 use App\Models\Salle;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EntreeController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
         $entrees = Entree::query()->with('items')->paginate();
-
-
         return view('entree.index', compact('entrees'));
     }
 
-    //Voir les details de l'entree
+    /**
+     * Affiche les détails d'une entrée
+     *
+     * @param Entree $entree L'entree que l'on souhaite afficher
+     * @return \Illuminate\Http\Response
+     */
     public function detail(Entree $entree){
+
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
         $equipements = Equipement::all();
         $magasins = Magasin::all();
 
@@ -30,18 +52,37 @@ class EntreeController extends Controller
         return view('entree.details', compact('items', 'equipements' , 'magasins'));
     }
 
+    /**
+     * Affiche le formulaire de création d'une entrée
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
         $magasins = Magasin::all();
         $equipements = Equipement::all();
         return view('entree.create' , compact('magasins','equipements'));
     }
 
-    /**
-     * Enregistrer une nouvelle entree
-     */
-    public function store(Request $request)
+
+        /**
+         * Store a newly created resource in storage.
+         *
+         * @param \Illuminate\Http\Request $request
+         * @return \Illuminate\Http\RedirectResponse
+         */
+    public function store(EntreeFormRequest $request)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
 
             //Recuperer la salle correspondant à la salle selectionée dans le formulaire
             //$salle = Salle::query()->find($request->salle_id);
@@ -67,59 +108,76 @@ class EntreeController extends Controller
             //Calculer le total en fonction des totaux des items de l'entrée
             $entree->total = $entree->items->sum('total');
             $entree->save();
-            //Mise à jour du stock de chaque equipement
-/*             foreach($request->equipement as $equi){
-                $equipem = Equipement::query()->find($equi['equipement_id']);
 
-
-                if ($equipem->APrice==null || $equipem->APrice==$equi['Aprice']){
-                    $equipem->update([
-                        'stock'=> $equipem->stock+=$equi['quantite'],
-                        'Aprice'=> $equi['Aprice'],
-                ]);
-                }else{
-                    Equipement::create([
-                        'name' => $equipem->name,
-                        'type' => $equipem->type,
-                        'Vprice' => $equipem->VPrice,
-                        'stock' => $equi['quantite'],
-                        'Aprice' => $equi['Aprice'],
-                    ]);
-                }
-
-            }; */
         return redirect()->route('entree.index');
     }
 
     public function edit(Entree $entree)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
        dd($entree);
        // return view('entree.edit', compact('entree'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Entree  $entree
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, Entree $entree)
     {
-        //dd($request , $entree);
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
+
         $entree->update([
             'salle_id' => $request->salle_id
         ]);
         return redirect()->route('entree.index')->with('success' , 'entrée modifier avec succès');
     }
 
-    /*
-     * Supprimer une entrée
+
+    /**
+     * Supprime l'entrée et ses items associés, puis redirige vers la page d'accueil des entrées.
+     *
+     * @param \App\Models\Entree $entree
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Entree $entree)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_ENTREE->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
         $entree->items()->delete();
         $entree->delete();
         return redirect()->route('entree.index');
     }
-    
-    /*
-     * Supprimer les items d'une entrée
+
+
+    /**
+     * Supprime un item d'une entrée et met à jour le total de cette entrée,
+     * puis redirige vers la page d'accueil des entrées.
+     *
+     * @param \App\Models\Item $item L'item que l'on souhaite supprimer
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function itemDelete(Item $item){
+
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::SUPPRIMER_ENTREE->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
         //dd($item);
         $entree = $item->entree;
 
@@ -131,10 +189,28 @@ class EntreeController extends Controller
 
         return redirect()->route('entree.index');
     }
+
     /**
-     * Modifier les items d'une entrée
+     * Modifie un item d'une entrée et met à jour le total de cette entrée,
+     * puis redirige vers la page d'accueil des entrées.
+     *
+     * @param \App\Models\Item $item L'item que l'on souhaite modifier
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function itemModifer(Item $item ,  Request $request){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
+
+        $request->validate([
+            'Aprice'=> 'required|numeric|min:1',
+            'equipement_id'=> 'required|numeric|exists:equipements,id',
+            'salle_id'=> 'required|numeric|exists:salles,id',
+            'quantite'=> 'required|numeric|min:1'
+        ]);
 
         $item->update([
             'Aprice' => $request->Aprice,
@@ -150,13 +226,18 @@ class EntreeController extends Controller
 
         return redirect()->route('entree.index')->with('success' , 'entrée modifier avec succès');
     }
+
     /**
      * Retourner la liste des items mais je l'ai fais pour des testes
      */
 
     public function itemIndex(){
-        $items = Item::all();
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::GERER_ENTREES->value)) {
 
+           abort(403, 'Vous n\'avez pas la permission de gérer les entrée.');
+       }
+        $items = Item::all();
         return $items;
     }
 

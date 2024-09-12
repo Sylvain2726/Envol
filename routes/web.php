@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DevisController;
@@ -12,7 +13,9 @@ use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\SalleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::view('about', 'about')->name('about');
 
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('supprimer/utilisateur{user}', [UserController::class, 'delete'])->name('users.delete');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -40,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('itemDevis' , DevisItemController::class);
     Route::resource('entree', EntreeController::class);
     Route::resource('commande', CommandeController::class);
+    Route::resource('role' , RoleController::class);
+
 
 
     Route::get('/salls/magasin-{magasin}', [SalleController::class, 'list'])->name('salle.liste');
@@ -70,6 +76,10 @@ Route::middleware('auth')->group(function () {
     Route::post('etape2/devis/' , [DevisController::class, 'post_etape2'])->name('post.etape2');
     Route::get('listeItem/devis/{devi}', [DevisController::class , 'listeItem'])->name('devis.items');
     Route::get('details/commande/{commande}', [CommandeController::class, 'detailCommande'])->name('commande.items');
+    Route::post('/role/assignerPermission/{role}' ,[RoleController::class, 'assignerPermission'])->name('role.assignerPermission');
+    Route::post('/role/retirerPermission/{role}' ,[RoleController::class, 'retirerPermission'])->name('role.retirerPermission');
+    Route::post('/utilisateru/assignerRole/{user}' ,[UserController::class, 'assignerRoleToUser'])->name('user.assignerRole');
+    Route::post('/utilisateru/retirerRole/{user}' ,[UserController::class, 'retirerRoleToUser'])->name('user.retirerRole');
 
     //Ces deux routes permette juste de remplire automatiquement certain champ en fonction du client ou équipement choisie
     Route::get('voir/client/{id}', [ClientController::class, 'show_client'])->name('show.client');

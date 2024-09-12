@@ -48,83 +48,101 @@
             {{ __('Tableau de bord') }}
         </x-nav-link>
 
+        @can('Gerer les entrées')
+            <x-nav-link href="{{ route('entree.index') }}" :active="request()->routeIs('entree.*')">
+                <x-slot name="icon">
 
-        <x-nav-link href="{{ route('entree.index') }}" :active="request()->routeIs('entree.*')">
-            <x-slot name="icon">
+                </x-slot>
+                {{ __('Entrées') }}
+            </x-nav-link>
+        @endcan
 
-            </x-slot>
-            {{ __('Entrées') }}
-        </x-nav-link>
+        @can('Gerer les devis')
+            <x-nav-link href="{{ route('devis.index') }}" :active="request()->routeIs('devis.index', 'devis.create', 'get.etape2' ,'devis.items')">
+                <x-slot name="icon">
 
-        <x-nav-link href="{{ route('devis.index') }}" :active="request()->routeIs('devis.index', 'devis.create', 'get.etape2' ,'devis.items')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Devis') }}
-        </x-nav-link>
-
-
-        <x-nav-link href="{{ route('commande.index') }}" :active="request()->routeIs('commande.index')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Commande') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('facture.index') }}" :active="request()->routeIs('facture.index', 'facture.create' , 'facture.payements' , 'facture.createPayment')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Facture') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('equipement.stock') }}" :active="request()->routeIs('equipement.stock')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Inventaire') }}
-        </x-nav-link>
+                </x-slot>
+                {{ __('Devis') }}
+            </x-nav-link>
+        @endcan
 
 
-        <x-nav-link href="{{ route('magasin.index') }}" :active="request()->routeIs('magasin.*', 'salle.liste')">
-            <x-slot name="icon">
+        @can('Gerer les commandes')
+            <x-nav-link href="{{ route('commande.index') }}" :active="request()->routeIs('commande.index' , 'commande.items')">
+                <x-slot name="icon">
 
-            </x-slot>
-            {{ __('Magasins') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('equipement.index') }}" :active="request()->routeIs('equipement.index', 'equipement.create', 'equipement.edit')">
-            <x-slot name="icon">
-
-            </x-slot>
-            {{ __('Equipements') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.*')">
-            <x-slot name="icon">
-                <svg class="w-6 h-6 t " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                        d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z"
-                        clip-rule="evenodd" />
-                </svg>
-
-            </x-slot>
-            {{ __('Clients') }}
-        </x-nav-link>
+                </x-slot>
+                {{ __('Commande') }}
+            </x-nav-link>
+        @endcan
 
 
-        <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
-            <x-slot name="icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                    </path>
-                </svg>
-            </x-slot>
-            {{ __('Utilisateurs') }}
-        </x-nav-link>
+
+        @can('Gerer les factures')
+            <x-nav-link href="{{ route('facture.index') }}" :active="request()->routeIs('facture.index', 'facture.create' , 'facture.payements' , 'facture.createPayment')">
+                <x-slot name="icon">
+
+                </x-slot>
+                {{ __('Facture') }}
+            </x-nav-link>
+        @endcan
+
+        @can('Consulter le stock des equipements')
+            <x-nav-link href="{{ route('equipement.stock') }}" :active="request()->routeIs('equipement.stock')">
+                <x-slot name="icon">
+
+                </x-slot>
+                {{ __('Inventaire') }}
+            </x-nav-link>
+        @endcan
+
+        @can('Gerer les magasins')
+            <x-nav-link href="{{ route('magasin.index') }}" :active="request()->routeIs('magasin.*', 'salle.liste')">
+                <x-slot name="icon">
+
+                </x-slot>
+                {{ __('Magasins') }}
+            </x-nav-link>
+        @endcan
+
+        @can('Gerer les équipements')
+            <x-nav-link href="{{ route('equipement.index') }}" :active="request()->routeIs('equipement.index', 'equipement.create', 'equipement.edit')">
+                <x-slot name="icon">
+
+                </x-slot>
+                {{ __('Equipements') }}
+            </x-nav-link>
+        @endcan
+
+        @can('Gerer les clients')
+            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.*')">
+                <x-slot name="icon">
+                    <svg class="w-6 h-6 t " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z"
+                            clip-rule="evenodd" />
+                    </svg>
+
+                </x-slot>
+                {{ __('Clients') }}
+            </x-nav-link>
+        @endcan
+
+        @can('Gerer les utilisateurs')
+            <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
+                <x-slot name="icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                </x-slot>
+                {{ __('Utilisateurs') }}
+            </x-nav-link>
+        @endcan
+
 {{--
                   <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
                     <x-slot name="icon">

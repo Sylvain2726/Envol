@@ -32,10 +32,6 @@
                             </svg>
                         </div>
 
-
-
-
-
                     </div>
 
                 </button>

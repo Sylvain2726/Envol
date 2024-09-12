@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -28,11 +30,22 @@ class AuthenticatedSessionController extends Controller
 
         $request->authenticate();
 
-        $request->session()->regenerate();
+
         $user = Auth::user();
+        // Vérifie si l'utilisateur a au moins un rôle
+        if ($user->roles->count() === 0) {
+            // Déconnecte l'utilisateur
+            Auth::logout();
+
+            // Redirige vers la page de connexion avec un message d'erreur
+            return redirect()->route('login')->with(['error' => 'Vous devez attendre une autorisation d\'accès pour vous connecter']);
+        }
+
         $user = User::where('id', $user->id)->update([
             'status' => true
         ]);
+
+        $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
