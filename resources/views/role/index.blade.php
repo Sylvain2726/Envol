@@ -25,7 +25,7 @@
   </button>
 
   <!-- Main modal -->
-  <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden animate__animated animate__zoomIn animate__faster overflow-y-auto overflow-x-hidden  fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
       <div class="relative p-4 w-full max-w-md max-h-full">
           <!-- Modal content -->
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -72,7 +72,7 @@
 
     @if (session('success'))
         <div id="toast-success"
-            class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+            class="flex items-center animate__animated animate__zoomIn animate__faster w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
             role="alert">
             <div
                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
@@ -175,7 +175,7 @@
                         </ul>
                     </div>
                     <div id="popup-modal-{{ $role->id }}" tabindex="-1"
-                        class="hidden overflow-y-auto transition duration-700 overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        class="hidden animate__animated animate__zoomIn animate__faster overflow-y-auto transition duration-700 overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                         <div class="relative p-4 w-full max-w-md max-h-full">
                             <div class="relative bg-zinc-100 rounded-lg shadow dark:bg-gray-700">
                                 <button type="button"
@@ -208,7 +208,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="authentication-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div id="authentication-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden animate__animated animate__zoomIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 
                         <div class="relative p-4 w-full max-w-md max-h-full">
                             <!-- Modal content -->
@@ -241,7 +241,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="permission-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center min-w-2xl items-center  md:inset-0 h-[calc(100%-1rem)] ">
+                    <div id="permission-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden animate__animated animate__zoomIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center min-w-2xl items-center  md:inset-0 h-[calc(100%-1rem)] ">
 
                         <div class="relative p-4 w-full max-w-lg max-h-full">
                             <!-- Modal content -->
@@ -278,7 +278,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="permissionRetirer-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center min-w-2xl items-center  md:inset-0 h-[calc(100%-1rem)] ">
+                    <div id="permissionRetirer-modal-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="hidden animate__animated animate__zoomIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center min-w-2xl items-center  md:inset-0 h-[calc(100%-1rem)] ">
 
                         <div class="relative p-4 w-full max-w-lg max-h-full">
                             <!-- Modal content -->

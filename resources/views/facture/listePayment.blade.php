@@ -1,89 +1,21 @@
 <x-app-layout>
 
-    <style>
-        .label-container {
-            position: fixed;
-            bottom: 48px;
-            right: 105px;
-            display: table;
-            visibility: hidden;
-        }
 
-        .label-text {
-            color: #FFF;
-            background: rgba(51, 51, 51, 0.5);
-            display: table-cell;
-            vertical-align: middle;
-            padding: 5px;
-            border-radius: 3px;
-            font-size: 20px
-        }
-
-        .label-arrow {
-            display: table-cell;
-            vertical-align: middle;
-            color: #333;
-            opacity: 0.5;
-        }
-
-        .float {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 20px;
-            right: 30px;
-            opacity: 0.7;
-            background-color: rgb(0, 204, 153);
-            color: #FFF;
-            border-radius: 50px;
-            text-align: center;
-            box-shadow: 5px 5px 5px #131615;
-        }
-
-        .my-float {
-            font-size: 24px;
-            margin-top: 18px;
-        }
-
-        a.float+div.label-container {
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s, opacity 0.5s ease;
-        }
-
-        a.float:hover+div.label-container {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
 
 
     <x-slot name="header">
         <div class="flex flex-col md:flex-row md:gap-10 md:items-center">
-            <h1 class="text-2xl md:text-5xl py-4">{{ __('Liste des payements de la facture N°'. $facture->numFacture) }}</h1>
+            <h1 class="text-2xl md:text-3xl py-4">{{ __('Liste des payements de la facture N°'. $facture->numFacture) }}</h1>
             <form class="py-4 " method="get" action="">
                 <input
                     class="rounded-xl placeholder-emerald-500 ring ring-emerald-500 focus:ring focus:outline-none  p-2 border-none shadow-inner shadow-gray-950"
                     name="search" id="search" value="{{ $request->search ?? '' }}" placeholder="Recherche">
             </form>
-            {{--             <div>
+            <div>
                 <a id="add"
                     class="p-1 text-2xl text-white font-bold hover:shadow-xl focus:ring ring-emerald-500 transition-all duration-500 ring-offset-4 rounded bg-emerald-400 shadow-black shadow-inner"
-                    href="{{ route('facture.create') }}">Ajouter</a>
-            </div> --}}
-
-            <a href="#" class="float flex justify-center hover:scale-105">
-
-                <svg class="w-6 h-6 text-white font-extrabold fa fa-plus my-float" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 12h14m-7 7V5" />
-                </svg>
-
-            </a>
-            <div class="label-container">
-                <div class="label-text">Ajouter</div>
-                <i class="fa fa-play label-arrow"></i>
+                    href="{{ route('facture.createPayment', $facture)}}">Ajouter
+                </a>
             </div>
         </div>
     </x-slot>
@@ -157,22 +89,22 @@
                 @foreach ($payements as $payement)
                     <tr id="ligne-{{ $facture->commande_id }}">
 
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $payement->numero }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $facture->commande?->devis?->client?->firstname }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $payement->montantPaye }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $payement->modePayement }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $payement->description?? 'Pas de numéro de chèque' }}</p>
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $payement->description?? '----' }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg text-center bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $payement->created_at }}</p>
                         </td>
 
@@ -195,42 +127,16 @@
                         <ul class="py-2 text-md text-gray-700 dark:text-gray-200 "
                             aria-labelledby="dropdownMenuIconButton">
 
+                            @if ($payement->modePayement == 'Cheque')
                             <li>
-                                <form method="GET" >
-                                    @csrf
-
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ajouter un payement</button>
-                                </form>
+                                <button data-modal-target="default-modal-{{ $payement->id }}" data-modal-toggle="default-modal-{{ $payement->id }}"  class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" type="button">
+                                   Voir le chèque
+                                  </button>
                             </li>
+                            @endif
 
                             <li>
-                                <form method="GET" >
-                                    @csrf
-
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Liste des payements</button>
-                                </form>
-                            </li>
-
-                            <li>
-                                <form method="GET" >
-                                    @csrf
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Génerer la facture</button>
-                                </form>
-                            </li>
-
-                            <li>
-                                <form method="GET">
-                                    @csrf
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Annuler</button>
-                                </form>
-                            </li>
-
-                            <li>
-                                <form id="supprimer-{{ $payement->id }}" method="post" >
+                                <form id="supprimer-{{ $payement->id }}" method="post" action="{{ route('payement.destroy', $payement) }}">
                                     @method('DELETE')
                                     @csrf
                                     <button data-modal-target="popup-modal-{{ $payement->id }}"
@@ -242,6 +148,31 @@
                             </li>
 
                         </ul>
+                    </div>
+                    <!-- Main modal -->
+                    <div id="default-modal-{{ $payement->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed  top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative p-4 w-full max-w-4xl max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <!-- Modal header -->
+                                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                        Chèque numéro {{ $payement->description }}
+                                    </h3>
+                                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal-{{ $payement->id }}">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="flex justify-center cursor-pointer bg-white/0" >
+                                    <img class="w-full transition-transform duration-700 hover:scale-125 ease-in-out bg-cover" src="{{$payement->imageUrl()}}" alt="">
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <div id="popup-modal-{{ $payement->id }}" tabindex="-1"
                         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -273,7 +204,7 @@
                                         Oui
                                     </button>
                                     <button data-modal-hide="popup-modal-{{ $payement->id }}" type="button"
-                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
+                                        class="py-2.5 px-5 ms-3 text-lg text-center font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
                                 </div>
                             </div>
                         </div>

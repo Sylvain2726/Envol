@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Payement extends Model
 {
@@ -14,10 +15,17 @@ class Payement extends Model
         'modePayement',
         'montantPaye',
         'description',
-        'numero'
+        'numero',
+        'image'
     ];
 
     public function facture(){
         return $this->belongsTo(Facture::class);
+    }
+
+    public function imageUrl(){
+
+      return Storage::url($this->image);
+
     }
 }

@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/facture/supprimer{facture}' , [FactureController::class, 'destroy'])->name('facture.destroy');
     Route::get('/facture/gereration{facture}' , [FactureController::class, 'generer'])->name('facture.generer');
     Route::get('/facture/listePayement{facture}' , [FactureController::class, 'listePayement'])->name('facture.payements');
+    Route::delete('/supprimer/payement/{payement}' , [FactureController::class, 'deletePayement'])->name('payement.destroy');
 
     Route::post('etape1/devis/store' , [DevisController::class, 'post_etape1'])->name('post.etape1');
     Route::get('etape2/devis/' , [DevisController::class, 'get_etape2'])->name('get.etape2');
@@ -81,7 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/utilisateru/assignerRole/{user}' ,[UserController::class, 'assignerRoleToUser'])->name('user.assignerRole');
     Route::post('/utilisateru/retirerRole/{user}' ,[UserController::class, 'retirerRoleToUser'])->name('user.retirerRole');
 
-    //Ces deux routes permette juste de remplire automatiquement certain champ en fonction du client ou équipement choisie
+    //Ces routes permettent juste de remplire automatiquement certain champ en fonction du client ou équipement choisie
     Route::get('voir/client/{id}', [ClientController::class, 'show_client'])->name('show.client');
     Route::get('voir/equipement/{id}', [EquipementController::class, 'show_equipement'])->name('show.equipement');
     Route::get('/voir/magasin/{id}', [MagasinController::class, 'show_magasin'])->name('show.magasin');

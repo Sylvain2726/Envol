@@ -24,7 +24,7 @@
     <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <div class="relative bg-zinc-100 rounded-lg shadow dark:bg-gray-700">
-                <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
@@ -35,40 +35,40 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Vous ête sûr de supprimer cette salle ?</h3>
-                    <button data-modal-hide="popup-modal" type="submit" form="supprimer" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    <button data-modal-hide="popup-modal" type="submit" form="supprimer" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg inline-flex items-center px-5 py-2.5 text-center">
                         Oui
                     </button>
-                    <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
+                    <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-lg font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="inline-block overflow-hidden min-w-full rounded-lg shadow-xl">
+    <div class="inline-block overflow-hidden min-w-full rounded-lg shadow shadow-black">
         @if(!($salles->isEmpty()))
             <table class="min-w-full leading-normal">
                 <thead>
                 <tr>
-                    <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">Nom</th>
-                    <th class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200">Magasin</th>
-                    <th colspan="3" class="px-5 py-3 text-xs font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-400/70 border-b-2 border-gray-200"></th>
+                    <th class="px-5 py-3 text-lg font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-500 border-b-2 border-gray-200">Nom</th>
+                    <th class="px-5 py-3 text-lg font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-500 border-b-2 border-gray-200">Magasin</th>
+                    <th colspan="3" class="px-5 py-3 text-lg font-bold tracking-wider text-left text-gray-900 uppercase bg-emerald-500 border-b-2 border-gray-200"></th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($salles as $salle)
                     <tr>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $salle->name }}</p>
                         </td>
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $salle->magasin->name }}</p>
                         </td>
 
-                        <td class="px-5 py-3 text-sm bg-white border-b border-gray-200">
+                        <td class="px-5 py-3 text-lg bg-white border-b border-gray-200">
                             <form id="supprimer" method="POST" action="{{ route('salle.destroy', ['salle' => $salle]) }}">
                                 @method('DELETE')
                                 @csrf
-                                <button  data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-2.5 text-center transition delay-150 duration-300 ease-in-out">Supprimer</button>
+                                <button  data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-lg px-4 py-2.5 text-center transition delay-150 duration-300 ease-in-out">Supprimer</button>
                             </form>
                         </td>
                     </tr>

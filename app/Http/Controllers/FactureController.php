@@ -12,6 +12,7 @@ use Generator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class FactureController extends Controller
 {
@@ -28,6 +29,8 @@ class FactureController extends Controller
 
            abort(403, 'Vous n\'avez pas la permission de gérer les factures.');
        }
+
+
         $factures = Facture::all();
         return view('facture.index', compact('factures'));
     }
@@ -66,9 +69,38 @@ class FactureController extends Controller
         return view('facture.create', compact('facture'));
     }
 
+    /**
+     * Supprime un payement et met à jour le montant restant de la facture associée.
+     *
+     * @param Payement $payement
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deletePayement(Payement $payement)
+    {
+        // Récupérer la facture associée
+        $facture = $payement->facture;
+       
 
-
-
+    
+        // Mettre à jour le montant restant de la facture
+        $facture->update([
+            'montantRestant' => $facture->montantRestant + $payement->montantPaye,
+            'montantPaye' => $facture->montantPaye - $payement->montantPaye
+        ]);
+    
+        // Supprimer l'image du chèque si elle existe
+        if ($payement->image != null) {
+            Storage::disk('public')->delete($payement->image);
+        }
+    
+        // Supprimer le paiement
+        $payement->delete();
+    
+        // Rediriger avec un message de succès
+        return redirect()->route('facture.payements', $facture)->with('success', 'Paiement supprimé avec succès !');
+    }
+    
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -77,13 +109,21 @@ class FactureController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function storePayement(Request $request , Facture $facture){
+
         //dd( $facture);
         $user = User::find(Auth::user()->id) ;
         if (!$user->can(PermissionsEnum::GERER_FACTURES->value)) {
 
            abort(403, 'Vous n\'avez pas la permission de gérer les payements.');
        }
+
         if ($facture->montantRestant>0) {
+            $data = $request->all();
+        
+            $image = $request->file('photoCheque');
+            if ($image != null && !$image->getError())  {
+                $data['photoCheque'] = $image->store('cheques', 'public');
+            }
 
             if ($request->montantPaye > $facture->montantRestant) {
                 return redirect()->route('facture.index')->with('error' , 'Montant payé superieur au montant restant');
@@ -96,7 +136,8 @@ class FactureController extends Controller
                 'montantPaye'=>$request->montantPaye,
                 'modePayement'=>$request->modePayement,
                 'description'=>$request->description?? null,
-                'numero'=> random_int(1000 , 9000).$facture->id
+                'numero'=> random_int(1000 , 9000).$facture->id,
+                'image'=>$data['photoCheque'] ?? null
 
             ]);
 
@@ -204,7 +245,13 @@ class FactureController extends Controller
            abort(403, 'Vous n\'avez pas la permission de supprimer les factures.');
        }
 
-        $facture->payemants()->delete();
+       foreach ($facture->payemants as $payement) {
+        if ($payement->image != null) {
+            Storage::disk('public')->delete($payement->image);
+            $payement->delete();
+        }
+
+       }
         $facture->delete();
         return redirect()->route('facture.index')->with('success' , 'Facture supprimer avec succès');
     }

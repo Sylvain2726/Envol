@@ -218,24 +218,6 @@
                         <ul class="py-2 text-md text-gray-700 dark:text-gray-200 "
                             aria-labelledby="dropdownMenuIconButton">
 
-                            <li>
-                                <form method="GET" action="{{ route('facture.createPayment', $facture)}}">
-                                    @csrf
-
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ajouter un payement</button>
-                                </form>
-                            </li>
-
-                            <li>
-                                <form method="GET" action="{{ route('facture.payements' , $facture) }}" >
-                                    @csrf
-                                    <button type="submit"
-                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Liste des payements</button>
-                                </form>
-                            </li>
-
-
 
                             <li>
                                 <form method="GET" action="{{ route('facture.generer' , $facture) }}">
@@ -244,6 +226,15 @@
                                         class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Génerer la facture</button>
                                 </form>
                             </li>
+                            
+                            <li>
+                                <form method="GET" action="{{ route('facture.payements' , $facture) }}" >
+                                    @csrf
+                                    <button type="submit"
+                                        class="block px-4 w-full font-semibold text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Paiements</button>
+                                </form>
+                            </li>
+
                             <li>
                                 <form method="GET">
                                     @csrf

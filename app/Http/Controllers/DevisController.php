@@ -129,8 +129,12 @@ class DevisController extends Controller
         $devis->user_id = Auth::user()->id;
 
         $devis->save();
+
         foreach ($request->equipements as $equipement) {
             $item = Item::query()->find($equipement['equipement_id']);
+            if ($equipement['quantite'] > $item->quantite) {
+                return redirect()->route('get.etape2');
+            }
 
             $devis->devisItems()->create([
 

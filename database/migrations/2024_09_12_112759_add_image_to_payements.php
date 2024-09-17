@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entrees', function (Blueprint $table) {
-            $table->id();
-            $table->float('total');
-            $table->timestamps();
+        Schema::table('payements', function (Blueprint $table) {
+            $table->string('image')->nullable();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_entrees');
+        Schema::table('payements', function (Blueprint $table) {
+            //
+        });
     }
 };

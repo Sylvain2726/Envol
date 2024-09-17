@@ -8,7 +8,7 @@
             <div class="text-3xl text-center mt-8 ">{{ __('Ajout de payement à la facture N°'.$facture->numFacture) }}</div>
 
             <div class="p-6 border-b  border-gray-200">
-                <form class="space-y-6"  method="post" action="{{ route('payement.store' , $facture) }}">
+                <form class="space-y-6"  method="post" action="{{ route('payement.store' , $facture) }}" enctype="multipart/form-data">
                     @method('POST')
                     @csrf
                     <div>
@@ -39,7 +39,11 @@
                     </div>
 
                     <div id="divDescription">
+                        {{-- Contenu génerer par Javascript --}}
+                    </div>
 
+                    <div id="divImage">
+                        {{-- Contenu générer par Javascript --}}
                     </div>
 
                     <div class="flex justify-center items-center">
@@ -60,7 +64,19 @@
       input.id = 'description'
       input.placeholder='Numéro de chèque'
       input.classList.add('w-full' , 'rounded', 'bg-zinc-300', 'ring-offset-4', 'border-none', 'placeHolder-black' ,'form-input' , 'hover:scale-105' , 'transition-all' , 'duration-700')
+
+      inputImage = document.createElement('input')
+      labelImage = document.createElement('label')
+      labelImage.innerText = 'Photo du chèque'
+      label.classList.add('my-2' , 'text-gray-700' , 'text-sm')
+      inputImage.name = 'photoCheque'
+      inputImage.id = 'photoCheque'
+      inputImage.placeholder='Photo du chèque'
+      inputImage.type = 'file'
+      inputImage.classList.add('w-full' , 'rounded', 'bg-zinc-300', 'ring-offset-4', 'border-none', 'placeHolder-black' ,'form-input' , 'hover:scale-105' , 'transition-all' , 'duration-700')
+
       div = document.getElementById('divDescription')
+      divImage = document.getElementById('divImage')
 
       select =  document.getElementById('selectID')
 
@@ -68,8 +84,11 @@
         if (select.value == 'Cheque') {
             div.appendChild(label)
             div.appendChild(input)
+            divImage.appendChild(labelImage)
+            divImage.appendChild(inputImage)
         }else{
             div.innerHTML = ''
+            divImage.innerHTML=''
         }
       })
 

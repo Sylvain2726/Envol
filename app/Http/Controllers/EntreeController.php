@@ -85,16 +85,13 @@ class EntreeController extends Controller
        }
 
             //Recuperer la salle correspondant à la salle selectionée dans le formulaire
-            //$salle = Salle::query()->find($request->salle_id);
             $entree = new Entree();
             $entree->total = 0;
             $entree->save();
-            //associer la salle recupere en haut a l'entrée
-            //$entree->salle()->associate($salle);
 
             /**
              * Pour chaque item d'entrée selectionné dans le formulaire
-             * on l'ajoute à l'entree directement à la liaison items()
+             * on l'ajoute à l'entree directement avec la liaison items()
              */
             foreach ($request->equipement as $equipement) {
                 $entree->items()->create([
@@ -143,8 +140,6 @@ class EntreeController extends Controller
         ]);
         return redirect()->route('entree.index')->with('success' , 'entrée modifier avec succès');
     }
-
-
     /**
      * Supprime l'entrée et ses items associés, puis redirige vers la page d'accueil des entrées.
      *
@@ -162,8 +157,6 @@ class EntreeController extends Controller
         $entree->delete();
         return redirect()->route('entree.index');
     }
-
-
     /**
      * Supprime un item d'une entrée et met à jour le total de cette entrée,
      * puis redirige vers la page d'accueil des entrées.

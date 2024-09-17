@@ -147,6 +147,9 @@
         .w-full {
             width: 100%;
         }
+        .flex-row {
+            flex-direction: row;
+        }
     </style>
 </head>
 <body>
@@ -160,14 +163,14 @@
         </div>
 
         <!-- Informations de facturation -->
-        <div class="flex justify-between mb-8">
+        <div class="flex flex-row justify-between items-center mb-8">
             <div>
                 <p class="text-lg text-dark">Date: <span class="font-semibold"> {{ $facture->created_at }}</span></p>
                 <p class="text-lg text-dark">Facturé à: <span class="font-semibold">{{ $facture->commande?->devis?->client?->firstname. ' '. $facture->commande?->devis?->client?->name }}</span></p>
             </div>
             <div class="text-right">
                 <p class="text-lg text-dark">Numéro de la facture</p>
-                <p class="text-lg text-dark"> <span class="font-semibold">{{ $facture->numFacture }}</span> </p>
+                <p class="text-lg text-dark">Adresse du client : <span class="font-semibold">{{ $facture->commande->devis?->client?->address }}</span> </p>
             </div>
         </div>
 

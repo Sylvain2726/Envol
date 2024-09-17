@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\enum\PermissionsEnum;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -14,12 +17,22 @@ class RoleController extends Controller
      */
     public function index()
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::CONSULTER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de consulter les roles.');
+       }
        $roles =  Role::all();
        $permissions = Permission::all();
         return view('role.index' , compact('roles' , 'permissions'));
     }
 
     public function assignerPermission( Request $request,Role $role){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier les roles.');
+       }
 
         foreach ($request->name as $permission) {
             $role->givePermissionTo($permission);
@@ -31,6 +44,11 @@ class RoleController extends Controller
     }
 
     public function retirerPermission( Request $request,Role $role){
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier les roles.');
+       }
 
         foreach ($request->name as $permission) {
             $role->revokePermissionTo($permission);
@@ -48,6 +66,11 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission d\'ajouter les roles.');
+       }
         return view('role.create');
     }
 
@@ -56,6 +79,11 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier les roles.');
+       }
         $request->validate([
             'name' => ['required', 'string', 'max:255' , Rule::unique('roles', 'name' )],
         ]);
@@ -85,6 +113,11 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier les roles.');
+       }
         $request->validate([
             'name' => ['required', 'string', 'max:255' , Rule::unique('roles', 'name' )->ignore($role->id)],
         ]);
@@ -97,6 +130,11 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        $user = User::find(Auth::user()->id) ;
+        if (!$user->can(PermissionsEnum::MODIFIER_ROLES->value)) {
+
+           abort(403, 'Vous n\'avez pas la permission de modifier les roles.');
+       }
         $role->delete();
         return redirect()->route('role.index')->with('success' , 'Role supprimer avec succes');
     }
